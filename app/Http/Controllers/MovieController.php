@@ -5,39 +5,21 @@ namespace App\Http\Controllers;
 use App\Movie;
 use App\Name;
 use App\Title;
+use App\Watched\Traits\TitleFilter;
 
 class MovieController extends Controller
 {
+    use TitleFilter;
+
     public function index()
     {
-        $movies = Title::query();
+        $movies = $this->filter()->simplePaginate(10);
 
-        if (request()->has('rating') && request('rating') !== 'All') {
-            $movies = $movies->wherehas('rating', function ($q) {
-                return $q->where([
-                    ['average_rating', '>', (int) request('rating')],
-                    ['average_rating', '<', (int)(request('rating')+1)]
-                ]);
-            });
-        }
+        $movies->each(function ($movie) {
+            $this->checkPoster($movie);
+        });
 
-        $movies = $movies->with(['poster', 'rating', 'watched'])
-            ->where('title_type', 'movie')
-            ->orderByDesc('weight');
-
-        if (request('not_watched') === 'yes') {
-            $movies = $movies->whereDoesntHave('watched');
-        }
-
-        if (request()->has('selected_year') && request('selected_year')!== '') {
-            $movies = $movies->where('start_year', request('selected_year'));
-        }
-
-        $movies = $movies->simplePaginate(10);
-
-        $year = request('selected_year');
-
-        return view('movies', compact('movies','year'));
+        return view('movies', compact('movies'));
     }
 
     public function show($id)
@@ -51,4 +33,6 @@ class MovieController extends Controller
 
         return view('show', compact('title', 'directors', 'writers'));
     }
+
+
 }

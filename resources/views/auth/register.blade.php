@@ -3,6 +3,6 @@
 
 @section('content')
     <div>
-        @livewire('auth.register')
+        @include('livewire.auth.register')
     </div>
 @endsection

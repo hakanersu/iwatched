@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Watched\Traits\TitleFilter;
 use Illuminate\Http\Request;
 use App\Movie;
 use App\Name;
@@ -10,36 +11,17 @@ use App\Episode;
 
 class SeriesController extends Controller
 {
+    use TitleFilter;
+
     public function index()
     {
-        $movies = Title::query();
+        $movies = $this->filter('tvSeries')->simplePaginate(10);
 
-        if (request()->has('rating') && request('rating') !== 'All') {
-            $movies = $movies->wherehas('rating', function ($q) {
-                return $q->where([
-                    ['average_rating', '>', (int) request('rating')],
-                    ['average_rating', '<', (int)(request('rating')+1)]
-                ]);
-            });
-        }
+        $movies->each(function ($movie) {
+            $this->checkPoster($movie);
+        });
 
-        $movies = $movies->with(['poster', 'rating', 'watched'])
-            ->where('title_type', 'tvSeries')
-            ->orderByDesc('weight');
-
-        if (request('not_watched') === 'yes') {
-            $movies = $movies->whereDoesntHave('watched');
-        }
-
-        if (request()->has('selected_year') && request('selected_year')!== '') {
-            $movies = $movies->where('start_year', request('selected_year'));
-        }
-
-        $movies = $movies->simplePaginate(10);
-
-        $year = request('year', \Carbon\Carbon::now()->year);
-
-        return view('series.index', compact('movies','year'));
+        return view('series.index', compact('movies'));
     }
 
     public function show($id)

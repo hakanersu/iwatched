@@ -2,21 +2,10 @@
 
 namespace App;
 
-use App\Jobs\FetchPosterJob;
 use Illuminate\Database\Eloquent\Model;
 
 class Title extends Model
 {
-    protected static function boot()
-    {
-        parent::boot();
-        static::retrieved(function ($model) {
-            if (is_null($model->poster->id)) {
-                dispatch(new FetchPosterJob($model->tconst));
-            }
-        });
-    }
-
     public function poster()
     {
         return $this->hasOne(Poster::class, 'title_id', 'tconst')->withDefault([
