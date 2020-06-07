@@ -4,17 +4,6 @@ iWatched is movie, tv series tracker for personal usage. iWatched uses [imdb dat
 
 Import part is done by native PostgreSql command copy with Elquent query builder.
 
-```php
-public function start(): ImporterInterface
-{
-    $this->output->writeln('<info>Importing titles, may take some time</info>');
-
-    DB::statement("COPY titles(tconst,title_type,primary_title,original_title,is_adult,start_year,end_year,runtime_minutes,genres) FROM '{$this->tsvPath}'");
-
-    return $this;
-}
-```
-
 ### ElasticSearch
 
 You can use abc tool to import titles table. After that you will get pretty fast search results.
