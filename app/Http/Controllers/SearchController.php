@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Title;
+use App\Watched;
 use Elasticsearch\ClientBuilder;
 use Illuminate\Http\Request;
 
@@ -60,10 +61,19 @@ class SearchController extends Controller
         $client = ClientBuilder::create()->setHosts([env('SCOUT_ELASTIC_HOST')])->build();
 
         $results = $client->search($params);
+
+        $watched = Watched::where('title_type', '!=','tvEpisode')->select('tconst')->cacheFor(60*60)->cacheTags(['shelf:1'])->get()->pluck('tconst')->toArray();
+
         $hits = collect($results['hits']['hits']);
 
         return response()->json([
-            'titles' => $hits->map(function ($item) {
+            'titles' => $hits->map(function ($item) use($watched) {
+                $item['_source']['watched'] = false;
+                // its not a good way. Maybe i have to index watched model with laravel
+                // scout and cross check in elastic search.
+                if (in_array($item['_source']['tconst'], $watched)) {
+                    $item['_source']['watched'] = true;
+                }
                 return $item['_source'];
             }),
         ]);

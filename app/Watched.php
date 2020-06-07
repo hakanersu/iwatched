@@ -3,9 +3,12 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Rennokki\QueryCache\Traits\QueryCacheable;
 
 class Watched extends Model
 {
+    use QueryCacheable;
+
     protected $table = 'watched';
 
     protected  $guarded = [];

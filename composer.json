@@ -9,6 +9,7 @@
     "license": "MIT",
     "require": {
         "php": "^7.4",
+        "ext-json": "*",
         "doctrine/dbal": "^2.10",
         "elasticsearch/elasticsearch": "^7.7",
         "fideloper/proxy": "^4.2",
@@ -19,7 +20,7 @@
         "laravel/framework": "^7.1",
         "laravel/horizon": "^4.3",
         "laravel/tinker": "^2.0",
-        "ext-json": "*"
+        "rennokki/laravel-eloquent-query-cache": "^2.0"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.3",

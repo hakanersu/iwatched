@@ -25,6 +25,12 @@
                         >
                             {{ result.title_type === 'movie' ? 'Movie' : 'Tv Series'}}
                         </span>
+                        <div
+                            class="ml-3 inline-flex items-center px-2 py-0.5 rounded text-xs font-medium leading-4 mr-2"
+                            :class="{'bg-green-100 text-green-800':result.watched, 'bg-red-100 text-red-800': !result.watched }"
+                        >
+                            {{ result.watched ? 'Watched' : 'Not watched' }}
+                        </div>
                     </div>
 
                 </li>
@@ -51,9 +57,10 @@
                             title_type: item.title_type,
                             title: item.original_title,
                             start_year: item.start_year,
+                            watched: item.watched
                         }
                     })
-                    console.log(res.data)
+
                     return result
                 })
             },
