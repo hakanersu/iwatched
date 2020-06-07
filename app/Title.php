@@ -20,7 +20,8 @@ class Title extends Model
 
     public function watched()
     {
-        return $this->hasOne(Watched::class, 'tconst', 'tconst');
+        return $this->hasOne(Watched::class, 'tconst', 'tconst')
+            ->where('user_id', auth()->id());
     }
 
     public function crew()
