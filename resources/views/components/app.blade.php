@@ -43,7 +43,7 @@
           </div>
         </div>
           <div class="flex flex-1">
-          <div class="search flex-1">
+          <div class="search flex-1 ml-10">
              <search />
           </div>
         <div class="hidden md:block">

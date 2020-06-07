@@ -38450,6 +38450,14 @@ input:invalid, textarea:invalid, select:invalid {
   height: 100%;
 }
 
+.autocomplete-input {
+  padding: 5px 12px 5px 48px !important;
+}
+
+.autocomplete-result-list {
+  padding-bottom: 0px !important;
+}
+
 @media (min-width: 640px) {
   .sm\:space-y-0 > :not(template) ~ :not(template) {
     --space-y-reverse: 0;
