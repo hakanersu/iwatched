@@ -2,7 +2,7 @@
 
 iWatched is movie, tv series tracker for personal usage. iWatched uses [imdb dataset](https://datasets.imdbws.com/). By a command it downloads all required datasets, unzips and imports to PostgreSQL database.
 
-Import part is done by native PostgreSql command copy with Elquent query builder.
+Import part is done by native PostgreSql command copy with Eloquent query builder. Part of the importing process also added weight column which will help ranking more accurately. You can find more information about imdb ranking algorithm [here](https://en.wikipedia.org/wiki/IMDb#Rankings).
 
 ### ElasticSearch
 
@@ -31,6 +31,11 @@ tt0903747 :imdb
 ### Series
 
 ![Image of Series](./public/images/series.png)
+
+### Posters
+
+Posters automatically fetched from themoviedb.org and stored at default storage.
+
 
 ### Commands
 
