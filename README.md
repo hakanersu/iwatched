@@ -25,6 +25,15 @@ abc import --src_type=postgres --src_filter=titles --src_uri="postgresql://postg
 
 ![Image of Searching](./public/images/search.gif)
 
+You can also use some shortcuts to find desired title.
+
+```sh
+the gift :year 2000
+```
+
+```sh
+tt0903747 :imdb
+```
 
 ### Movies
 
