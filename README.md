@@ -6,7 +6,7 @@ Import part is done by native PostgreSql command copy with Elquent query builder
 
 ### ElasticSearch
 
-You can use abc tool to import titles table. After that you will get pretty fast search results.
+You can use [abc tool](https://github.com/appbaseio/abc) to import titles table. After that you will get pretty fast search results.
 
 ```sh
 abc import --src_type=postgres --src_filter=titles --src_uri="postgresql://postgres:<your-password>@127.0.0.1:5432>/<database-name>" "http://localhost:9200/titles"
