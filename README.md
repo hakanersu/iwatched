@@ -49,3 +49,8 @@ Or import only given tables.
 ```sh
 php artisan import:titles --only=rating
 ```
+
+### TODO
+
+- [ ] Add docker compose.
+- [ ] Minio/AWS integration for posters.
