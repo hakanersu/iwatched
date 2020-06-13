@@ -12,7 +12,7 @@ Route::middleware('auth')->group(function () {
 	Route::resource('/series', 'SeriesController');
 	Route::get('/dashboard', 'DashboardController@index')->name('home');
 	Route::get('search', 'SearchController@search')->name('search');
-	Route::redirect('home', '/dashboard');
+	//Route::redirect('home', '/dashboard');
 });
 
 
