@@ -45,6 +45,7 @@ class SeriesController extends Controller
             ->leftJoin('titles', 'episodes.tconst', '=', 'titles.tconst')
             ->leftJoin('watched', 'watched.tconst', '=', 'episodes.tconst')
             ->where('parent_tconst', $id)
+            ->whereNotNull('season_number')
             ->orderBy('titles.tconst', 'DESC')
             ->get();
 
