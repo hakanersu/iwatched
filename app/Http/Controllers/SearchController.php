@@ -62,7 +62,13 @@ class SearchController extends Controller
 
         $results = $client->search($params);
 
-        $watched = Watched::where('title_type', '!=','tvEpisode')->select('tconst')->cacheFor(60*60)->cacheTags(['shelf:1'])->get()->pluck('tconst')->toArray();
+        $watched = cache()->remember("users_watched_".auth()->id(), 60, function() {
+            return Watched::where('title_type', '!=','tvEpisode')
+                ->select('tconst')
+                ->get()
+                ->pluck('tconst')
+                ->toArray();
+        });
 
         $hits = collect($results['hits']['hits']);
 

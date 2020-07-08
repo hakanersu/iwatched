@@ -38,6 +38,7 @@ class WatchedController extends Controller
             $watched = Watched::where('tconst', $id)->firstOrFail();
             $watched->delete();
         }
+        cache()->forget("users_watched_".auth()->id());
 
         response()->noContent();
     }
