@@ -18,6 +18,7 @@ class CreateWatchedTable extends Migration
             $table->string('tconst', 16)->unique()->index();
             $table->string('title_type');
             $table->unsignedBigInteger('user_id')->index();
+            $table->timestamp('watched_at')->nullable();
             $table->timestamps();
         });
     }
