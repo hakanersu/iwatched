@@ -1,2 +1,1 @@
-#!/usr/bin/env bash
-chmod 777 -R /application/storage
+#!/bin/sh

@@ -10,6 +10,8 @@ services:
     volumes:
       - ./:/application:cached
       - ./.cloud/php/local.ini:/usr/local/etc/php/conf.d/local.ini
+    networks:
+      - elastic
 
   pgsql:
     image: postgres:10.11
@@ -25,6 +27,8 @@ services:
     volumes:
       - db-data:/var/lib/postgresql:cached
       - ./:/application:cached
+    networks:
+      - elastic
 
   nginx:
     image: nginx:alpine
@@ -35,11 +39,15 @@ services:
       - ./:/application:cached
     depends_on:
       - iwatched-server
+    networks:
+      - elastic
 
   redis:
     image: redis:alpine
     ports:
-      - "6379:6379"
+      - "6397:6379"
+    networks:
+      - elastic
 
   es01:
     image: docker.elastic.co/elasticsearch/elasticsearch:7.7.1

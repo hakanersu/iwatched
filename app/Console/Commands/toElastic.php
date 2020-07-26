@@ -38,9 +38,14 @@ class toElastic extends Command
      */
     public function handle()
     {
-        $command = base_path('bin') . '/abc import --src_type=postgres --src_filter=titles --src_uri="'.$this->postgresUrl().'" "http://iwatched-es01:9200/titles"';
+        $command = base_path('bin') . '/abc import --src_type=postgres --src_filter=titles --src_uri="'.$this->postgresUrl().'" "http://iwatched-es01:9200/titles" 2>/dev/null';
         $this->info($command);
-        exec($command);
+        exec($command, $output, $return);
+        if (!$return) {
+            $this->info("Import succesfull");
+        }else {
+            $this->error("ES cluster not up yet please take a few minutes and try again.");
+        }
     }
 
     private function postgresUrl(): string

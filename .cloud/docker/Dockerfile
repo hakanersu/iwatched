@@ -23,15 +23,5 @@ RUN pecl install redis && docker-php-ext-enable redis
 # Installing composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
-# Setting locales
-RUN echo tr_TR.UTF-8 UTF-8 > /etc/locale.gen && locale-gen
-
 # Changing Workdir
 WORKDIR /application
-
-COPY .cloud/scripts/entrypoint.sh /etc/entrypoint.sh
-RUN chmod +x /etc/entrypoint.sh
-
-RUN chown -R www-data:www-data /application
-# Not a good idea for production.
-
