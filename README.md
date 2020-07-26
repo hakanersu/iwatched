@@ -9,7 +9,7 @@ Import part is done by native PostgreSql command copy with Eloquent query builde
 You can use [abc tool](https://github.com/appbaseio/abc) to import titles table. After that you will get pretty fast search results.
 
 ```sh
-abc import --src_type=postgres --src_filter=titles --src_uri="postgresql://postgres:<your-password>@127.0.0.1:5432>/<database-name>" "http://localhost:9200/titles"
+abc import --src_type=postgres --src_filter=titles --src_uri="postgresql://postgres:<your-password>@127.0.0.1:5432/<database-name>" "http://localhost:9200/titles"
 ```
 
 ![Image of Searching](./public/images/search.gif)
@@ -55,7 +55,40 @@ Or import only given tables.
 php artisan import:titles --only=rating
 ```
 
+### Docker compose
+
+Check .env.example file and be sure above ports not used.
+
+```dotenv
+PSQL_PORT=5439:5432
+APP_PORT=8000:8000
+```
+
+
+#### Commands
+
+```
+docker-compose up -d
+
+# If you getting any error when storage:link just remove public/storage folder.
+docker-compose run --rm --no-deps iwatched-server php artisan storage:link
+docker-compose run --rm --no-deps iwatched-server php artisan migrate
+docker-compose run --rm --no-deps iwatched-server php artisan import:titles
+```
+
+You can now access app http://localhost:8000 with this url.
+
+
+```
+docker-compose run --rm --no-deps iwatched-server php artisan import:elastic
+// If you start docker-compose recently please wait es cluster up.
+```
+
+After first run you can start/stop app with this commands.
+
+```
+docker-compose start
+```
 ### TODO
 
-- [ ] Add docker compose.
 - [ ] Minio/AWS integration for posters.
