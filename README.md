@@ -87,7 +87,7 @@ After first run you can start/stop app with below commands.
 
 ```
 docker-compose start
-docker-compose start
+docker-compose stop
 ```
 ### TODO
 
