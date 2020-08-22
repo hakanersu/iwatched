@@ -6,7 +6,7 @@ Import part is done by native PostgreSql command copy with Eloquent query builde
 
 ### Searching
 
-By default search is done by elasticsearch if you wish to search directly from database add `ELASTICSEARCH=false` variable to you .env file.
+By default search is done by elasticsearch if you wish to search directly from database add `ELASTICSEARCH=false` variable to you .env file. Keep in mind database search is very slow.
 
 ### ElasticSearch
 
