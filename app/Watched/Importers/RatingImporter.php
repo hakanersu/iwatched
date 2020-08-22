@@ -24,7 +24,8 @@ class RatingImporter extends Importer implements ImporterInterface
         DB::raw(DB::statement('ALTER TABLE ratings ALTER COLUMN average_rating TYPE numeric(3,1) USING (average_rating::numeric(3,1))'));
         DB::raw(DB::statement('ALTER TABLE ratings ALTER COLUMN num_votes TYPE integer USING (num_votes::integer)'));
         $this->output->writeln('<info>Updating title weights.</info>');
-        DB::raw(DB::statement('UPDATE "titles" SET weight = ((ratings.num_votes*ratings.average_rating + (25000*7))/( ratings.num_votes+25000)) FROM "ratings" WHERE "titles"."tconst" = "ratings"."tconst"'));
+        DB::raw(DB::statement('UPDATE "titles" SET weight = ROUND(((ratings.num_votes*ratings.average_rating + (25000*7))/( ratings.num_votes+25000) )::numeric,2)*100 FROM "ratings" WHERE "titles"."tconst" = "ratings"."tconst"'));
+        DB::raw(DB::statement('CREATE INDEX ON public.titles (weight)'));
         return $this;
     }
 }
