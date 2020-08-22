@@ -5,6 +5,7 @@
             aria-label="Search for title"
             placeholder="Search for title"
             :get-result-value="getResultValue"
+            :debounceTime="300"
         >
             <template #result="{ result, props }">
                 <li

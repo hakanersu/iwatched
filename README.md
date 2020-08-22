@@ -4,6 +4,10 @@ iWatched is movie, tv series tracker for personal usage. iWatched uses [imdb dat
 
 Import part is done by native PostgreSql command copy with Eloquent query builder. Part of the importing process also added weight column which will help ranking more accurately. You can find more information about imdb ranking algorithm [here](https://en.wikipedia.org/wiki/IMDb#Rankings).
 
+### Searching
+
+By default search is done by elasticsearch if you wish to search directly from database add `ELASTICSEARCH=false` variable to you .env file.
+
 ### ElasticSearch
 
 You can use [abc tool](https://github.com/appbaseio/abc) to import titles table. After that you will get pretty fast search results.

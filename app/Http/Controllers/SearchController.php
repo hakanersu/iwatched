@@ -11,51 +11,92 @@ class SearchController extends Controller
 {
     public function search()
     {
+        $imdbIdSearch = $this->searchImdbId();
+
+        if ($imdbIdSearch) {
+            return $imdbIdSearch;
+        }
+
+        if (!config('movie.elasticsearch')) {
+            return $this->regularSearch();
+        }
+
+        return $this->searchInElasticsearch();
+    }
+
+    public function regularSearch()
+    {
         $name = request('search');
 
-        $m = view()->make("queries/elasticsearch", [])->render();
+        if (strlen($name) < 3) {
+            return response()->json(['titles' => []]);
+        }
 
-        $m = json_decode($m, true);
+        $titles = Title::query();
+
+        preg_match('/:year\s(\d{4})/m', $name, $output_array);
+
+        if (count($output_array)>0 && $output_array[1]) {
+            $titles->where('start_year', $output_array[1]);
+            $name = trim(str_replace($output_array[0], "", $name));
+        }
+
+        $titles  = $titles->where('original_title', 'ILIKE', "%{$name}");
+
+        $watched = cache()->remember("users_watched_".auth()->id(), 60, function() {
+            return Watched::where('title_type', '!=','tvEpisode')
+                ->select('tconst')
+                ->get()
+                ->pluck('tconst')
+                ->toArray();
+        });
+
+        $titles->orderBy('weight', 'DESC');
+
+        $titles = $titles->take(10)->get();
+
+        return response()->json([
+            'titles' => $titles->map(function ($item) use($watched) {
+                $title =  [
+                    "original_title"=> $item->original_title,
+                    "start_year"=> $item->start_year,
+                    "weight"=> $item->weight,
+                    "primary_title"=> $item->primary_title,
+                    "title_type"=> $item->title_type,
+                    "tconst"=> $item->tconst,
+                    "watched" => false
+                ];
+
+                if (in_array($item->tconst, $watched)) {
+                    $title['watched'] = true;
+                }
+
+                return $title;
+            })
+        ]);
+    }
+
+    public function searchInElasticsearch()
+    {
+        $name = request('search');
+
+        $elasticQuery = view()->make("queries/elasticsearch", [])->render();
+
+        $elasticQuery = json_decode($elasticQuery, true);
 
         preg_match('/:year\s(\d{4})/m', $name, $output_array);
 
         if (count($output_array)>0 && $output_array[1]) {
             $search = trim(str_replace($output_array[0], "", $name));
-            $m['query']['bool']['must'][0]['multi_match']['query'] = strtolower($search);
-            $m['query']['bool']['must'][1]['match']['start_year'] = $output_array[1];
+            $elasticQuery['query']['bool']['must'][0]['multi_match']['query'] = strtolower($search);
+            $elasticQuery['query']['bool']['must'][1]['match']['start_year'] = $output_array[1];
         } else {
-            $m['query']['bool']['must'][0]['multi_match']['query'] = strtolower($name);
-        }
-
-        preg_match('/(tt(.*?)) :imdb/m', $name, $imdb_ouput);
-
-
-        if (count($imdb_ouput)>0 && $imdb_ouput[1]) {
-            $search = trim(str_replace($imdb_ouput[1], "", $name));
-
-            $imdb = Title::where('tconst', $imdb_ouput[1])->first();
-
-            $response = [
-                'titles' =>[
-                    [
-                        "original_title"=> $imdb->original_title,
-                        "start_year"=> $imdb->start_year,
-                        "weight"=> $imdb->weight,
-                        "primary_title"=> $imdb->primary_title,
-                        "title_type"=> $imdb->title_type,
-                        "tconst"=> $imdb->tconst
-                    ]
-                ]
-            ];
-
-            if ($imdb) {
-                return response()->json($response);
-            }
+            $elasticQuery['query']['bool']['must'][0]['multi_match']['query'] = strtolower($name);
         }
 
         $params = [
             'index' => 'titles',
-            'body' => $m,
+            'body' => $elasticQuery,
         ];
 
         $client = ClientBuilder::create()->setHosts([env('SCOUT_ELASTIC_HOST')])->build();
@@ -83,5 +124,35 @@ class SearchController extends Controller
                 return $item['_source'];
             }),
         ]);
+    }
+
+    public function searchImdbId()
+    {
+        preg_match('/(tt(.*?)) :imdb/m', request('search'), $imdbOutput);
+
+        if (count($imdbOutput)<=0 || !isset($imdbOutput[1])) {
+            return false;
+        }
+
+        $imdb = Title::where('tconst', $imdbOutput[1])->first();
+
+        if (!$imdb) {
+            return false;
+        }
+
+        $response = [
+            'titles' =>[
+                [
+                    "original_title"=> $imdb->original_title,
+                    "start_year"=> $imdb->start_year,
+                    "weight"=> $imdb->weight,
+                    "primary_title"=> $imdb->primary_title,
+                    "title_type"=> $imdb->title_type,
+                    "tconst"=> $imdb->tconst
+                ]
+            ]
+        ];
+
+        return response()->json($response);
     }
 }

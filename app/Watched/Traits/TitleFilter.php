@@ -16,7 +16,7 @@ trait TitleFilter
         if (request()->has('rating') && request('rating') !== 'Rating') {
             $movies = $movies->wherehas('rating', function ($q) {
                 return $q->where([
-                    ['average_rating', '>', (int) request('rating')],
+                    ['average_rating', '>=', (int) request('rating')],
                     ['average_rating', '<', (int)(request('rating')+1)]
                 ]);
             });
