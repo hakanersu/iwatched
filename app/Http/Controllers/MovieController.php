@@ -26,7 +26,8 @@ class MovieController extends Controller
     {
         $title = Title::with('crew', 'principal', 'principal.name','poster','watched', 'rating')
             ->where('tconst', $id)
-            ->first();
+            ->firstOrFail();
+
 
         $directors = Name::whereIn('nconst',explode(',', $title->crew->directors))->get();
         $writers = Name::whereIn('nconst', explode(',', $title->crew->writers))->get();
