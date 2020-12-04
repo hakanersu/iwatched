@@ -13,7 +13,7 @@ class WatchedController extends Controller
         $items = Watched::with(['title', 'title.rating'])
             ->join('titles', 'watched.tconst_id', '=', 'titles.tconst')
             ->whereIn('titles.title_type', ['movie', 'tvSeries'])
-            ->orderByDesc('titles.start_year')
+            ->orderByDesc('watched.created_at')
             ->paginate(10);
 
         return view('watched.index', [
