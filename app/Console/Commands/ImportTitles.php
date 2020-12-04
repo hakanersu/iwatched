@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
-
+use Storage;
 class ImportTitles extends Command
 {
     /**
@@ -39,6 +39,8 @@ class ImportTitles extends Command
         $this->info('Starting.');
 
         $fields = $original = ['title', 'episode', 'principal', 'name', 'crew', 'aka', 'rating'];
+
+        Storage::makeDirectory('imdb');
 
         $skip = $this->option('skip');
         $only = $this->option('only');

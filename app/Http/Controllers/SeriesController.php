@@ -2,48 +2,41 @@
 
 namespace App\Http\Controllers;
 
-use App\Watched\Traits\TitleFilter;
-use Illuminate\Http\Request;
-use App\Movie;
-use App\Name;
-use App\Title;
-use App\Episode;
+use App\Models\Episode;
+use App\Models\Name;
+use App\Models\Series;
 
 class SeriesController extends Controller
 {
-    use TitleFilter;
-
     public function index()
     {
-        $movies = $this->filter('tvSeries')->simplePaginate(10);
+        $series = Series::filter()->simplePaginate(10);
 
-        $movies->each(function ($movie) {
+        $series->each(function ($movie) {
             $this->checkPoster($movie);
         });
 
-        return view('series.index', compact('movies'));
+        return view('series.index', compact('series'));
     }
 
     public function show($id)
     {
-        $title = Title::with('crew', 'principal', 'principal.name','poster','watched', 'rating')
+        $series = Series::with('crew', 'principal', 'principal.name','poster','watched', 'rating')
             ->where('tconst', $id)
             ->first();
 
-        $directors = Name::whereIn('nconst',explode(',', $title->crew->directors))->get();
-        $writers = Name::whereIn('nconst', explode(',', $title->crew->writers))->get();
+        $directors = Name::whereIn('nconst',explode(',', $series->crew->directors))->get();
+        $writers = Name::whereIn('nconst', explode(',', $series->crew->writers))->get();
 
-        $episodes = Episode::distinct('titles.tconst')->select([
+        $episodes = Episode::with('watched')->distinct('titles.tconst')->select([
                 'episodes.id',
                 'episodes.season_number',
                 'titles.tconst',
                 'titles.original_title',
                 'titles.runtime_minutes',
-                'titles.primary_title',
-                'watched.watched_at'
+                'titles.primary_title'
             ])
             ->leftJoin('titles', 'episodes.tconst', '=', 'titles.tconst')
-            ->leftJoin('watched', 'watched.tconst', '=', 'episodes.tconst')
             ->where('parent_tconst', $id)
             ->whereNotNull('season_number')
             ->orderBy('titles.tconst', 'DESC')
@@ -55,6 +48,6 @@ class SeriesController extends Controller
             return $item->sortBy('episode_number')->values();
         });
 
-        return view('series.show', compact('title', 'directors', 'writers', 'episodes', 'seasons'));
+        return view('series.show', compact('series', 'directors', 'writers', 'episodes', 'seasons'));
     }
 }

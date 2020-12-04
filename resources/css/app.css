@@ -1,0 +1,43 @@
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+
+.poster {
+    mask-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, black), color-stop(0.35, black), color-stop(0.5, black), color-stop(0.65, black), color-stop(0.85, rgba(0, 0, 0, 0.6)), color-stop(1, transparent));
+}
+[x-cloak] { display: none; }
+
+:root {
+    --bg-btn: #fed7d7;
+    --btn-color: #e53e3e;
+    --bg-btn-checked: #C6F6D5;
+    --btn-color-checked: #38A169;
+}
+
+.checkbox:checked ~ .btn-change::before {
+    transition: 0.3s;
+    transform: translateX(23px);
+ }
+
+.btn-change {
+    background-color: var(--bg-btn);
+}
+
+.btn-change.checked {
+    background-color: var(--bg-btn-checked);
+}
+
+.checked.btn-change::before {
+    background-color: var(--btn-color-checked);
+}
+
+.btn-change::before {
+    content: '';
+    display: block;
+    width: 17px;
+    height: 17px;
+    border-radius: 50%;
+    background-color: var(--btn-color);
+    transition: 0.3s;
+    transform: translateX(0);
+}
