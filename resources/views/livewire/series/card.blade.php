@@ -7,7 +7,7 @@
     <div class="flex flex-col flex-1 justify-between h-full">
         <div class="p-3">
             <div class="flex justify-between">
-                <a href="{{ route('movies.show', [$series->tconst]) }}">
+                <a href="{{ route('series.show', [$series->tconst]) }}">
                     <h1 class="text-gray-800 text-xl">{{ $series->primary_title }}</h1>
                 </a>
             </div>
