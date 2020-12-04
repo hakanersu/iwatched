@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Watched;
+use App\Models\Watched;
 
 class DashboardController extends Controller
 {
@@ -10,7 +10,7 @@ class DashboardController extends Controller
     {
         $watchedByYears = Watched::select('titles.start_year')
             ->selectRaw("COUNT('id')")
-            ->leftJoin('titles', 'watched.tconst', '=', 'titles.tconst')
+            ->leftJoin('titles', 'watched.tconst_id', '=', 'titles.tconst')
             ->groupBy('titles.start_year')
             ->orderByRaw("COUNT('id') DESC")
             ->limit(15)
@@ -18,7 +18,7 @@ class DashboardController extends Controller
 
         $watched = Watched::query()
             ->selectRaw("count(case when title_type = 'tvEpisode' then 1 end) as tvEpisode")
-            ->selectRaw("count(case when title_type = 'movie' then 1 end) as movie")
+            ->selectRaw("count(case when title_type = 'App\Models\Movie' then 1 end) as movie")
             ->selectRaw("count(case when title_type = 'tvSeries' then 1 end) as tvSeries")
             ->first();
 

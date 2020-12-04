@@ -1,0 +1,23 @@
+<?php
+
+namespace App\Models;
+
+use App\Watched\Traits\Filterable;
+use Illuminate\Database\Eloquent\Builder;
+
+/**
+ * @method static filter()
+ */
+class Series extends Title
+{
+    use Filterable;
+
+    protected $table = 'titles';
+
+    protected static function booted()
+    {
+        static::addGlobalScope('titleType', function (Builder $builder) {
+            $builder->where('title_type', 'tvSeries');
+        });
+    }
+}

@@ -15,7 +15,7 @@ class CreateWatchedTable extends Migration
     {
         Schema::create('watched', function (Blueprint $table) {
             $table->id();
-            $table->string('tconst', 16)->unique()->index();
+            $table->string('tconst_id', 16)->unique()->index();
             $table->string('title_type');
             $table->unsignedBigInteger('user_id')->index();
             $table->timestamp('watched_at')->nullable();

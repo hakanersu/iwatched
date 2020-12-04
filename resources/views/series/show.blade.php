@@ -1,130 +1,117 @@
-<x-app :title="$title->primary_title">
-    <div class="container mx-auto">
-        <series inline-template>
-            <div class="flex items-stretch">
-                <div class="w-64">
-                    <movie :title="{{ $title }}"></movie>
-                    <button @click="active = 'info'" class="bg-indigo-500 py-1 px-3 mt-3 text-white rounded w-full">Series info</button>
+<x-app-layout>
+    <x-slot name="header">
+        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+            {{ $series->primary_title }}
+        </h2>
+    </x-slot>
+    <x-slot name="buttons">
+        <livewire:watch-button :movie="$series" wire:key="movie-{{$series->id}}" />
+    </x-slot>
+
+    <div class="py-12">
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+            <div class="shadow overflow-hidden sm:rounded-md bg-white flex">
+                <div class="bg-black">
+                    <img src="{{ $series->image() }}" alt="{{ $series->primary_title }}" class="w-auto  poster">
                 </div>
-                <div class="flex-1 ml-3">
-                    <div class="bg-white shadow  rounded h-full relative overflow-hidden">
-                        <ul class="flex p-3">
-                          @foreach($seasons as $season)
-                          <li class="mr-3">
-                            <a
-    					    	:class="{
-                                    'border-blue-500 bg-blue-500 text-white': active === {{ $loop->iteration }},
-                                    'border border-white text-blue-500 hover:bg-gray-200 hover:border-gray-200' : active !== {{ $loop->iteration}}}"
-                                class="inline-block rounded py-1 px-3"
-                                href="#"
-                                @click.prevent="active = {{ $loop->iteration }}"
-                            >
-                                Season {{ $loop->iteration }}
-                            </a>
-                          </li>
-                          @endforeach
-                        </ul>
-{{--                        <div>--}}
-{{--                            <div class="mx-auto p-5 text-center">--}}
-{{--                                <div class="mx-auto loader ease-linear rounded-full border-4 border-t-4 border-gray-200 h-10 w-10"></div>--}}
-{{--                            </div>--}}
-{{--                        </div>--}}
-                        @foreach ($seasons as $season => $episodes)
-                            <div id="season-{{ $season}}" v-if="active === {{ $season }}">
-                                 <table class="w-full">
-                                    <thead>
-                                        <tr>
-                                            <th class="text-left bg-gray-100 border-b border-gray-200 px-6 py-2 text-gray-600 font-bold tracking-wider uppercase text-xs">No.</th>
-                                            <th class="text-left bg-gray-100 border-b border-gray-200 px-6 py-2 text-gray-600 font-bold tracking-wider uppercase text-xs">Title</th>
-                                            <th class="text-left bg-gray-100 border-b border-gray-200 px-6 py-2 text-gray-600 font-bold tracking-wider uppercase text-xs">Run Time</th>
-                                            <th class="text-left bg-gray-100 border-b border-gray-200 px-6 py-2 text-gray-600 font-bold tracking-wider uppercase text-xs"></th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                       @foreach ($episodes as $episode)
-                                       <tr class="hover:bg-gray-100 py-10{{ $loop->last ? '' : ' border-b border-gray-200' }}">
-                                            <td class="px-4 py-4">{{  $loop->iteration }}</td>
-                                            <td class="px-4 py-4">{{ $episode->original_title }}</td>
-                                            <td class="px-4 py-4">{{ $episode->runtime_minutes === 'N' ? 'Unknown' : $episode->runtime_minutes. ' Minutes' }}</td>
-                                            <td class="px-4 py-4">
-                                                <div class="flex justify-end">
-                                                    <checkbox :episode="{{ $episode }}" key="episode-{{ $episode->tconst }}"/>
-                                                </div>
-                                            </td>
-                                       </tr>
-                                       @endforeach
-                                    </tbody>
-                                </table>
-                            </div>
+                <div class="flex-1" x-data="{tab: 'season-1'}" x-cloak>
+                    <div class="flex px-3 py-3">
+                        @foreach ($seasons as $number => $season)
+                            <x-step :step="$number"    @click="tab = 'season-{{ $number }}'"/>
                         @endforeach
-                        <div v-if="active === 'info'">
-                            <h3 class="text-2xl leading-tight text-gray-800 mt-5 mb-3 mx-5 block">Directors</h3>
-                            <table class="w-full mb-5">
-                                <thead>
-                                    <th class="text-left bg-gray-100 border-b border-gray-200 px-6 py-2 text-gray-600 font-bold tracking-wider uppercase text-xs">Name</th>
-                                    <th class="text-left bg-gray-100 border-b border-gray-200 px-6 py-2 text-gray-600 font-bold tracking-wider uppercase text-xs">Job</th>
-                                    <th class="text-left bg-gray-100 border-b border-gray-200 px-6 py-2 text-gray-600 font-bold tracking-wider uppercase text-xs">Birth year</th>
-                                    <th class="text-left bg-gray-100 border-b border-gray-200 px-6 py-2 text-gray-600 font-bold tracking-wider uppercase text-xs">Death year</th>
-                                </thead>
-                                @foreach ($directors as $director)
-                                    <tr class="hover:bg-gray-100 border-b border-gray-200 py-10">
-                                        <td class="px-4 py-4">{{ $director->primary_name }}</td>
-                                        <td class="px-4 py-4">{{ collect(explode(',',$director->primary_profession))->map(fn($item) => \Str::ucfirst($item))->implode(',') }}</td>
-                                        <td class="px-4 py-4">{{ $director->birth_year ?? '-' }}</td>
-                                        <td class="px-4 py-4">{{ $director->death_year ?? '-' }}</td>
-                                    </tr>
-                                @endforeach
-                            </table>
-                            <h3 class="text-2xl leading-tight text-gray-800 mt-5 mb-3 mx-5 block">Writers</h3>
+                            <x-step step="Info" @click="tab = 'info'"/>
+                    </div>
+                    @foreach ($seasons as $season => $episodes)
+                        <div id="season-{{ $season}}" x-show="tab === 'season-{{ $loop->index + 1 }}'">
                             <table class="w-full">
                                 <thead>
-                                    <th class="text-left bg-gray-100 border-b border-gray-200 px-6 py-2 text-gray-600 font-bold tracking-wider uppercase text-xs">Name</th>
-                                    <th class="text-left bg-gray-100 border-b border-gray-200 px-6 py-2 text-gray-600 font-bold tracking-wider uppercase text-xs">Job</th>
-                                    <th class="text-left bg-gray-100 border-b border-gray-200 px-6 py-2 text-gray-600 font-bold tracking-wider uppercase text-xs">Birth year</th>
-                                    <th class="text-left bg-gray-100 border-b border-gray-200 px-6 py-2 text-gray-600 font-bold tracking-wider uppercase text-xs">Death year</th>
+                                <tr>
+                                    <x-table.th title="#" />
+                                    <x-table.th title="Title" />
+                                    <x-table.th title=""/>
+                                </tr>
                                 </thead>
-                                @foreach ($writers as $director)
-                                    <tr class="hover:bg-gray-100 border-b border-gray-200 py-10">
-                                        <td class="px-4 py-4">{{ $director->primary_name }}</td>
-                                        <td class="px-4 py-4">{{ collect(explode(',',$director->primary_profession))->map(fn($item) => \Str::ucfirst($item))->implode(',') }}</td>
-                                        <td class="px-4 py-4">{{ $director->birth_year ?? '-' }}</td>
-                                        <td class="px-4 py-4">
-                                            @if($director->death_year)
-                                                {{ $director->death_year }} ({{ $director->death_year-$director->birth_year }})
-                                            @else
-                                                -
-                                            @endif
+                                <tbody>
+                                @foreach ($episodes as $episode)
+                                    <tr class="hover:bg-gray-100 py-10{{ $loop->last ? '' : ' border-b border-gray-200' }}">
+                                        <td class="px-4 py-4 w-3 text-center" >{{  $loop->iteration }}</td>
+                                        <td class="px-4 py-4">{{ $episode->original_title }}</td>
+                                        <td class="px-4 py-4 text-right">
+                                            <livewire:checkbox :episode="$episode" :name="$season.$loop->iteration" key="{{ $season.$loop->iteration }}"/>
                                         </td>
                                     </tr>
                                 @endforeach
-                            </table>
-                            <h3 class="text-2xl leading-tight text-gray-800 mt-5 mb-3 mx-5 block">Cast</h3>
-                            <table class="w-full">
-                                <thead>
-                                    <th class="text-left bg-gray-100 border-b border-gray-200 px-6 py-2 text-gray-600 font-bold tracking-wider uppercase text-xs">Name</th>
-                                    <th class="text-left bg-gray-100 border-b border-gray-200 px-6 py-2 text-gray-600 font-bold tracking-wider uppercase text-xs">Job</th>
-                                    <th class="text-left bg-gray-100 border-b border-gray-200 px-6 py-2 text-gray-600 font-bold tracking-wider uppercase text-xs">Birth year</th>
-                                    <th class="text-left bg-gray-100 border-b border-gray-200 px-6 py-2 text-gray-600 font-bold tracking-wider uppercase text-xs">Death year</th>
-                                </thead>
-                                @foreach ($title->principal as $principal)
-                                    <tr class="hover:bg-gray-100 border-b border-gray-200 py-10">
-                                        <td class="px-4 py-4">{{ $principal->name->primary_name }}</td>
-                                        <td class="px-4 py-4">{{ \Str::ucfirst($principal->category) }}</td>
-                                        <td class="px-4 py-4">{{ $principal->name->birth_year ?? '-' }}</td>
-                                        <td class="px-4 py-4">
-                                            @if($principal->name->death_year)
-                                                {{ $principal->name->death_year }} ({{ $principal->name->death_year-$principal->name->birth_year }})
-                                            @else
-                                                -
-                                            @endif
-                                        </td>
-                                    </tr>
-                                @endforeach
+                                </tbody>
                             </table>
                         </div>
+                    @endforeach
+                    <div x-show="tab === 'info'">
+                        <h3 class="text-2xl leading-tight text-gray-800  mb-3 mx-3 block">Directors</h3>
+                        <table class="w-full mb-5">
+                            <thead>
+                            <x-table.th title="Name" />
+                            <x-table.th title="Job" />
+                            <x-table.th title="Birth year" />
+                            <x-table.th title="Death year" />
+                            </thead>
+                            @foreach ($directors as $director)
+                                <tr class="hover:bg-gray-100 border-b border-gray-200 py-10">
+                                    <td class="px-4 py-4">{{ $director->primary_name }}</td>
+                                    <td class="px-4 py-4">{{ collect(explode(',',$director->primary_profession))->map(fn($item) => \Str::ucfirst($item))->implode(',') }}</td>
+                                    <td class="px-4 py-4">{{ $director->birth_year ?? '-' }}</td>
+                                    <td class="px-4 py-4">{{ $director->death_year ?? '-' }}</td>
+                                </tr>
+                            @endforeach
+                        </table>
+                        <h3 class="text-2xl leading-tight text-gray-800 mt-5 mb-3 mx-5 block">Writers</h3>
+                        <table class="w-full">
+                            <thead>
+                            <x-table.th title="Name" />
+                            <x-table.th title="Job" />
+                            <x-table.th title="Birth year" />
+                            <x-table.th title="Death year" />
+                            </thead>
+                            @foreach ($writers as $director)
+                                <tr class="hover:bg-gray-100 border-b border-gray-200 py-10">
+                                    <td class="px-4 py-4">{{ $director->primary_name }}</td>
+                                    <td class="px-4 py-4">{{ collect(explode(',',$director->primary_profession))->map(fn($item) => \Str::ucfirst($item))->implode(',') }}</td>
+                                    <td class="px-4 py-4">{{ $director->birth_year ?? '-' }}</td>
+                                    <td class="px-4 py-4">
+                                        @if($director->death_year)
+                                            {{ $director->death_year }} ({{ $director->death_year-$director->birth_year }})
+                                        @else
+                                            -
+                                        @endif
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </table>
+                        <h3 class="text-2xl leading-tight text-gray-800 mt-5 mb-3 mx-5 block">Cast</h3>
+                        <table class="w-full">
+                            <thead>
+                            <x-table.th title="Name" />
+                            <x-table.th title="Job" />
+                            <x-table.th title="Birth year" />
+                            <x-table.th title="Death year" />
+                            </thead>
+                            @foreach ($series->principal as $principal)
+                                <tr class="hover:bg-gray-100 border-b border-gray-200 py-10">
+                                    <td class="px-4 py-4">{{ $principal->name->primary_name }}</td>
+                                    <td class="px-4 py-4">{{ \Str::ucfirst($principal->category) }}</td>
+                                    <td class="px-4 py-4">{{ $principal->name->birth_year ?? '-' }}</td>
+                                    <td class="px-4 py-4">
+                                        @if($principal->name->death_year)
+                                            {{ $principal->name->death_year }} ({{ $principal->name->death_year-$principal->name->birth_year }})
+                                        @else
+                                            -
+                                        @endif
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </table>
                     </div>
                 </div>
             </div>
-        </series>
+        </div>
     </div>
-</x-app>
+</x-app-layout>

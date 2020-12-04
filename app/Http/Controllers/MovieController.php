@@ -2,38 +2,35 @@
 
 namespace App\Http\Controllers;
 
-use App\Movie;
-use App\Name;
-use App\Title;
+use App\Models\Movie;
+use App\Models\Name;
+use App\Models\Title;
 use App\Watched\Traits\TitleFilter;
 
 class MovieController extends Controller
 {
-    use TitleFilter;
 
     public function index()
     {
-        $movies = $this->filter()->simplePaginate(10);
+        $movies = Movie::filter()->simplePaginate(10);
 
         $movies->each(function ($movie) {
             $this->checkPoster($movie);
         });
 
-        return view('movies', compact('movies'));
+        return view('movies.index', compact('movies'));
     }
 
     public function show($id)
     {
-        $title = Title::with('crew', 'principal', 'principal.name','poster','watched', 'rating')
+        $movie = Movie::with('crew', 'principal', 'principal.name','poster','watched', 'rating')
             ->where('tconst', $id)
             ->firstOrFail();
 
 
-        $directors = Name::whereIn('nconst',explode(',', $title->crew->directors))->get();
-        $writers = Name::whereIn('nconst', explode(',', $title->crew->writers))->get();
+        $directors = Name::whereIn('nconst',explode(',', $movie->crew->directors))->get();
+        $writers = Name::whereIn('nconst', explode(',', $movie->crew->writers))->get();
 
-        return view('show', compact('title', 'directors', 'writers'));
+        return view('movies.show', compact('movie', 'directors', 'writers'));
     }
-
-
 }
