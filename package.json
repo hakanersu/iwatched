@@ -12,7 +12,7 @@
     "devDependencies": {
         "@tailwindcss/custom-forms": "^0.2",
         "@tailwindcss/ui": "^0.1",
-        "axios": "^0.19",
+        "axios": "^0.21",
         "cross-env": "^7.0",
         "laravel-mix": "^5.0.1",
         "laravel-mix-tailwind": "^0.1.0",
