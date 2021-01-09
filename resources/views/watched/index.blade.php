@@ -18,7 +18,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ($items as $item)
+                    @forelse ($items as $item)
                     <tr class="hover:bg-grey-lighter">
                         <td class="py-4 px-6 border-b border-grey-light">
                             <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium leading-4 {{ $item->title_type === 'movie' ? 'bg-indigo-100 text-indigo-800' : 'bg-purple-100 text-purple-800' }}">
@@ -38,7 +38,15 @@
                             <a href="https://www.imdb.com/title/{{ $item->tconst }}" target="_blank">{{ $item->tconst }}</a>
                         </td>
                     </tr>
-                    @endforeach
+                    @empty
+                    <tr>
+                        <td colspan="5">
+                            <div class="p-5">
+                                There is no movies on your watched list.
+                            </div>
+                        </td>
+                    </tr>
+                    @endforelse
                 </tbody>
             </table>
             </div>

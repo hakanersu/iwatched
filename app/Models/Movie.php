@@ -21,4 +21,17 @@ class Movie extends Title
             $builder->where('title_type', 'movie');
         });
     }
+
+    /**
+     * Return poster
+     *
+     * @return string
+     */
+    public function image(): string
+    {
+        if (config('iwatched.fetch_posters')) {
+            return $this->tmdb($this->tconst, 'movie_results');
+        }
+        return url("/storage/posters/{$this->poster->image}");
+    }
 }

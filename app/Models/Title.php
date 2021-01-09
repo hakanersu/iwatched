@@ -6,7 +6,7 @@ use App\Watched\Traits\Watchable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
-
+use Http;
 /**
  * @property mixed title_type
  * @property mixed tconst
@@ -81,5 +81,13 @@ class Title extends Model
         }
 
         return '/series/'.$this->tconst;
+    }
+
+    protected function tmdb($id, $type='movie_results')
+    {
+        $response = Http::get("https://api.themoviedb.org/3/find/{$id}?api_key=4a830bf4dffd075d3b62bf8008168e0d&external_source=imdb_id");
+        $posterPath = $response->json("{$type}.0.poster_path");
+
+        return "https://image.tmdb.org/t/p/w500{$posterPath}";
     }
 }

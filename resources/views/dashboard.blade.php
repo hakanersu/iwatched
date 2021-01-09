@@ -27,12 +27,20 @@
                     <h1 class="text-2xl text-indigo-800 leading-none">Watched movies by release date</h1>
                 </div>
                 <table class="text-left w-full border-collapse">
-                    @foreach($watchedByYears as $years)
+                    @forelse($watchedByYears as $years)
                         <tr class="hover:bg-grey-lighter">
                             <td class="py-4 px-6 border-b border-grey-light">{{ $years->start_year }}</td>
                             <td class="py-4 px-6 border-b border-grey-light">{{ $years->count }}</td>
                         </tr>
-                    @endforeach
+                    @empty
+                    <tr>
+                        <td colspan="2">
+                            <div class="p-5">
+                                There is no movies watched.
+                            </div>
+                        </td>
+                    </tr>
+                    @endforelse
                 </table>
             </div>
         </div>

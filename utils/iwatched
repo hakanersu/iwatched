@@ -1,0 +1,157 @@
+#!/bin/bash
+
+# This bash file's source is: https://github.com/francislavoie/laravel-websockets-example
+#-------------------#
+#----- Helpers -----#
+#-------------------#
+
+usage() {
+    echo "$0 [COMMAND] [ARGS]"
+    echo "  Commands:"
+    echo "  - start/up:    boots up the Docker stack"
+    echo "  - stop/down:   shuts down the Docker stack"
+    echo "  - dc:          alias to docker-compose"
+    echo "  - cmd:         runs an arbitrary command in the workspace container"
+    echo "  - cmdr:        same as 'cmd', but running as the root user"
+    echo "  - shell:       opens a shell into the workspace container, same as 'cmd bash'"
+    echo "  - shellr:      same as 'shell', but running as the root user"
+    echo "  - tinker:      opens the PHP REPL (PsySH)"
+    echo "  - migrate:     runs database migrations"
+    echo "  - import:      imports imdb database"
+    echo "  - index:       indexes to meilisearch"
+    echo "  - seed:        runs database seeding"
+    echo "  - artisan:     runs a command with artisan"
+    echo "  - yarn:        runs a command with yarn"
+    echo "  - composer:    runs a command with composer"
+    echo "  - test:        runs the PHPUnit tests"
+    echo "  - coverage:    runs the PHPUnit tests, with code coverage"
+    echo "  - stan:        run PHPStan/Larastan static analysis on the project"
+    echo "  - watch:       runs 'yarn run watch' to aid in JS development"
+}
+
+fn_exists() {
+    type $1 2>/dev/null | grep -q 'is a function'
+}
+
+COMMAND=$1
+shift
+ARGUMENTS=${@}
+
+#--------------------#
+#----- Commands -----#
+#--------------------#
+
+dc() {
+    docker-compose "${@}"
+}
+
+start() {
+    dc up -d
+}
+
+up() {
+    start
+}
+
+stop() {
+    dc down
+}
+
+down() {
+    stop
+}
+
+cmd() {
+    dc exec -e COLUMNS="`tput cols`" -e LINES="`tput lines`" iwatched-server "${@}"
+}
+
+cmdr() {
+    dc exec -e COLUMNS="`tput cols`" -e LINES="`tput lines`" iwatched-server "${@}"
+}
+
+shell() {
+    cmd bash
+}
+
+shellr() {
+    cmdr bash
+}
+
+artisan() {
+    cmd php artisan "${@}"
+}
+
+import() {
+    artisan import:titles
+}
+
+index() {
+    artisan scout:import "App\Title"
+}
+
+tinker() {
+    artisan tinker
+}
+
+migrate() {
+    artisan migrate
+}
+
+seed() {
+    artisan db:seed "${@}"
+}
+
+yarn() {
+    cmd bash -l -c "yarn ${*}"
+}
+
+watch() {
+    cmd bash -l -c "yarn run watch"
+}
+
+composer() {
+    cmd bash -l -c "composer ${*}"
+}
+
+test() {
+    cmd vendor/bin/phpunit "${@}"
+}
+
+coverage() {
+    cmd vendor/bin/phpunit --coverage-html=coverage "${@}"
+}
+
+stan() {
+    artisan code:analyse --level=max --paths="app,domain"
+}
+
+gethostip() {
+    cmd /sbin/ip route | awk '/default/ { print $3 }'
+}
+
+migratesafe() {
+    c=0
+    while ! `dc exec db sh -c 'export MYSQL_PWD=$MYSQL_ROOT_PASSWORD; exec mysql -uroot -e"quit"' >/dev/null 2>&1` >/dev/null 2>&1
+    do
+        echo "MySQL is not ready, waiting $(expr 30 - $c) more seconds..."
+        ((c++)) && ((c==30)) && { echo "Timed out."; exit 1; }
+        sleep 1
+    done
+
+    migrate
+}
+
+#---------------------#
+#----- Execution -----#
+#---------------------#
+
+fn_exists $COMMAND
+if [ $? -eq 0 ]; then
+    # cd into the script's current directory so docker-compose reference the right dir
+    cd "${0%/*}"
+
+    # Execute
+    $COMMAND $ARGUMENTS
+else
+    usage
+fi

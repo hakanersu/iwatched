@@ -1,7 +1,8 @@
 <?php
 
 return [
-    'save_poster' => ENV('SAVE_POSTERS', false),
+    'save_poster' => env('SAVE_POSTERS', false),
+    'fetch_posters' => env('FETCH_POSTERS', true),
     'tmdb' => [
         'account_id' => env('TMDB_ACCOUNT_ID'),
         'v3' => env('TMDB_V3_KEY'),
