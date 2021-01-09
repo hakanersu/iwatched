@@ -18,7 +18,8 @@
         "laravel/jetstream": "^1.6",
         "laravel/sanctum": "^2.6",
         "laravel/tinker": "^2.5",
-        "livewire/livewire": "^2.0"
+        "livewire/livewire": "^2.0",
+        "meilisearch/meilisearch-laravel-scout": "^0.12.1"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.5",

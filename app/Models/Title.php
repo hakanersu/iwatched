@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Http;
+use Laravel\Scout\Searchable;
 /**
  * @property mixed title_type
  * @property mixed tconst
@@ -15,7 +16,7 @@ use Http;
  */
 class Title extends Model
 {
-    use Watchable;
+    use Watchable, Searchable;
 
     /**
      * Get poster of title.

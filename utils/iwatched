@@ -19,6 +19,7 @@ usage() {
     echo "  - migrate:     runs database migrations"
     echo "  - import:      imports imdb database"
     echo "  - index:       indexes to meilisearch"
+    echo "  - create:      create meilisearch index"
     echo "  - seed:        runs database seeding"
     echo "  - artisan:     runs a command with artisan"
     echo "  - yarn:        runs a command with yarn"
@@ -85,8 +86,12 @@ import() {
     artisan import:titles
 }
 
+create() {
+    artisan scout:index titles --key tconst
+}
+
 index() {
-    artisan scout:import "App\Title"
+    artisan scout:import "App\Models\Title"
 }
 
 tinker() {

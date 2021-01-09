@@ -59,10 +59,20 @@ docker-compose up -d
 
 # If you getting any error when storage:link just remove public/storage folder.
 utils/iwatched php artisan storage:link
+
 # This will migrate basic user tables.
 utils/iwatched php artisan migrate
+
 # Downloads imdb dataset if its not already downloaded and imports to pgsql.
 utils/iwatched import
+
+# Create meilisearch index
+utils/iwatched create
+
+# Indexes titles table to meilisearch. Scout import pretty fast but meilisearch queue all imports so you have 
+# to give time meilisearch finish queue, don't stop containers until it finishes. You can reach meilisearch 
+# from http://localhost:7700/
+utils/iwatched index
 ```
 
 You can now access app http://localhost:8000 with this url.
