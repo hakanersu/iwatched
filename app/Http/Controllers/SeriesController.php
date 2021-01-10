@@ -24,9 +24,11 @@ class SeriesController extends Controller
         $series = Series::with('crew', 'principal', 'principal.name','poster','watched', 'rating')
             ->where('tconst', $id)
             ->first();
-
-        $directors = Name::whereIn('nconst',explode(',', $series->crew->directors))->get();
-        $writers = Name::whereIn('nconst', explode(',', $series->crew->writers))->get();
+        if (!$series) {
+            abort(404);
+        }
+        $directors = Name::whereIn('nconst',explode(',', $series->crew->directors ?? ''))->get();
+        $writers = Name::whereIn('nconst', explode(',', $series->crew->writers ?? ''))->get();
 
         $episodes = Episode::with('watched')->distinct('titles.tconst')->select([
                 'episodes.id',

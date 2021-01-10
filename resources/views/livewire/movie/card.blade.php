@@ -1,7 +1,7 @@
 <div class="bg-white min-h-full flex flex-col shadow-md rounded-md">
     <div class="poster">
         <a href="{{ route('movies.show', [$movie->tconst]) }}">
-            <img src="{{ $movie->image() }}" alt="">
+            <img src="{{ $movie->image() }}" alt="{{ $movie->primary_title }}" loading="lazy">
         </a>
     </div>
     <div class="flex flex-col flex-1 justify-between h-full">

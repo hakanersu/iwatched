@@ -24,9 +24,14 @@
 
             <!-- Page Heading -->
             <header class="bg-white shadow">
-                <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8 flex justify-between items-center">
+                <div class="max-w-7xl mx-auto relative px-4 sm:px-6 lg:px-8 flex justify-between items-center">
                     <div>{{ $header }}</div>
-                    <div>{{ $buttons ?? '' }}</div>
+                    <div class="flex item-center my-2 w-1/2 justify-end">
+                        <livewire:search-dropdown />
+                        <div class="ml-3">
+                         {{ $buttons ?? '' }}
+                        </div>
+                    </div>
                 </div>
             </header>
 
