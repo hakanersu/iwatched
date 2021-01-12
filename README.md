@@ -30,24 +30,34 @@ tt0903747 :imdb
 
 ### Posters
 
-Posters automatically fetched from themoviedb.org and stored at default storage.
+Posters automatically fetched from themoviedb.org and stored at default storage or you can config to fetch posters from themoviedb.org (But it will significantly slow down app boot times/page load times.)
+
+```
+# .env variable to fetch posters from api.
+FETCH_POSTERS=true
+```
+
+```
+# .env variable for saving posters from themoviedb.org on background.
+SAVE_POSTERS=true 
+```
 
 ### Commands
 
 ```sh
-php artisan import:titles
+utils/iwatched artisan import:titles
 ```
 
 You can skip tables.
 
 ```sh
-php artisan import:titles --skip=title
+utils/iwatched artisan import:titles --skip=title
 ```
 
 Or import only given tables.
 
 ```sh
-php artisan import:titles --only=rating
+utils/iwatched artisan import:titles --only=rating
 ```
 
 ### Docker compose
@@ -77,14 +87,11 @@ utils/iwatched index
 
 You can now access app http://localhost:8000 with this url.
 
-```
-# If you start docker-compose recently please wait es cluster up and try again.
-utils/iwatched index
-```
-
 After first run you can start/stop app with below commands.
 
 ```
 docker-compose start
 docker-compose stop
 ```
+
+
