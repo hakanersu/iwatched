@@ -22,6 +22,12 @@ class SearchDropdown extends Component
 
         $builder = $this->buildSearch();
 
+        if ($builder->imdb) {
+            $imdb = Title::where('tconst', $builder->imdb)->first();
+            $this->searchResults = [$imdb];
+            return;
+        }
+
         $this->searchResults =  Title::search($builder->search, function (Indexes $meilisearch, $query, $options) use($builder){
             if ($builder->year) {
                 $options['filters'] = 'start_year="'.$builder->year.'"';
@@ -49,6 +55,17 @@ class SearchDropdown extends Component
         $type = false;
         $search = $this->search;
 
+        preg_match('/(tt(.*?)) :imdb/m', $this->search, $imdbOutput);
+
+        if (count($imdbOutput) >0 || isset($imdbOutput[1])) {
+            return (object) [
+                'search' => $search,
+                'year' => $year,
+                'type' => $type,
+                'imdb' => $imdbOutput[1]
+            ];
+        }
+
         preg_match('/:year\s(\d{4})/m', $this->search, $output_array);
 
         if (count($output_array)>0 && $output_array[1]) {
@@ -67,6 +84,7 @@ class SearchDropdown extends Component
             'search' => $search,
             'year' => $year,
             'type' => $type,
+            'imdb' => false
         ];
     }
 }

@@ -14,7 +14,7 @@ class Controller extends BaseController
 
     protected function checkPoster($movie)
     {
-        if (is_null($movie->poster->id) && config('iwatched.save_posters')) {
+        if (is_null($movie->poster->id) && config('iwatched.save_poster')) {
             dispatch(new FetchPosterJob($movie->tconst));
         }
     }

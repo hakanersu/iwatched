@@ -27,6 +27,7 @@ class MovieController extends Controller
             ->where('tconst', $id)
             ->firstOrFail();
 
+        $this->checkPoster($movie);
 
         $directors = Name::whereIn('nconst',explode(',', $movie->crew->directors))->get();
         $writers = Name::whereIn('nconst', explode(',', $movie->crew->writers))->get();

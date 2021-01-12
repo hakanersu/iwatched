@@ -34,7 +34,7 @@ class FetchPosterJob implements ShouldQueue
      */
     public function handle()
     {
-        $info = "https://api.themoviedb.org/3/movie/{$this->titleID}?api_key=".config('movie.v3')."&language=en-US";
+        $info = "https://api.themoviedb.org/3/movie/{$this->titleID}?api_key=".config('iwatched.tmdb.v3')."&language=en-US";
         $info = json_decode(file_get_contents($info));
         $file = file_get_contents("http://image.tmdb.org/t/p/w500{$info->poster_path}");
         $name = (string) Str::uuid().'.jpg';

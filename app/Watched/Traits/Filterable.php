@@ -17,7 +17,7 @@ trait Filterable
             });
         }
 
-        $query->with(['poster', 'rating', 'watched'])->orderByDesc('weight');
+        $query->with(['poster', 'rating', 'watched'])->orderByDesc('weight')->orderByDesc('tconst');
 
         if (request('not_watched') === 'yes') {
             $query->whereDoesntHave('watched');

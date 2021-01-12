@@ -13,6 +13,17 @@ services:
     networks:
       - iwatched
 
+  horizon:
+    build: .cloud/docker
+    image: iwatched-horizon:1.0.0
+    command: php artisan horizon
+    depends_on:
+      - pgsql
+    volumes:
+      - ./:/application:cached
+    networks:
+      - iwatched
+
   pgsql:
     image: postgres:10.11
     container_name: iwatched-pgsql
