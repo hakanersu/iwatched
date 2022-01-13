@@ -2,29 +2,75 @@
     "private": true,
     "scripts": {
         "dev": "npm run development",
-        "development": "cross-env NODE_ENV=development node_modules/webpack/bin/webpack.js --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js",
-        "watch": "npm run development -- --watch",
-        "watch-poll": "npm run watch -- --watch-poll",
-        "hot": "cross-env NODE_ENV=development node_modules/webpack-dev-server/bin/webpack-dev-server.js --inline --hot --config=node_modules/laravel-mix/setup/webpack.config.js",
+        "development": "mix",
+        "watch": "mix watch",
+        "watch-poll": "mix watch -- --watch-options-poll=1000",
+        "hot": "mix watch --hot",
         "prod": "npm run production",
-        "production": "cross-env NODE_ENV=production node_modules/webpack/bin/webpack.js --no-progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js"
+        "production": "mix --production"
     },
     "devDependencies": {
-        "@tailwindcss/custom-forms": "^0.2",
-        "@tailwindcss/ui": "^0.1",
+        "@inertiajs/inertia": "^0.10.0",
+        "@inertiajs/inertia-vue3": "^0.5.1",
+        "@inertiajs/progress": "^0.2.6",
+        "@tailwindcss/forms": "^0.2.1",
+        "@tailwindcss/typography": "^0.3.0",
+        "@vue/compiler-sfc": "^3.0.5",
         "axios": "^0.21",
-        "cross-env": "^7.0",
-        "laravel-mix": "^5.0.1",
-        "laravel-mix-tailwind": "^0.1.0",
-        "resolve-url-loader": "^3.1.0",
-        "sass": "^1.15.2",
-        "sass-loader": "^8.0.0",
-        "tailwindcss": "^1.4",
-        "vue": "^2.6.11",
-        "vue-template-compiler": "^2.6.11"
+        "laravel-mix": "^6.0.6",
+        "lodash": "^4.17.19",
+        "postcss": "^8.1.14",
+        "postcss-import": "^12.0.1",
+        "tailwindcss": "^2.0.1",
+        "vue": "^3.0.5",
+        "vue-loader": "^16.1.2"
     },
-    "dependencies": {
-        "@trevoreyre/autocomplete-vue": "^2.2.0",
-        "dayjs": "^1.8.28"
+    "eslintConfig": {
+        "root": true,
+        "extends": [
+            "plugin:vue/essential",
+            "eslint:recommended"
+        ],
+        "parserOptions": {
+            "parser": "babel-eslint"
+        },
+        "rules": {
+            "import/no-unresolved": 0,
+            "import/no-unassigned-import": 0,
+            "semi": [
+                "error",
+                "never"
+            ],
+            "no-console": "off",
+            "space-before-function-paren": [
+                "error",
+                {
+                    "anonymous": "always",
+                    "named": "always",
+                    "asyncArrow": "always"
+                }
+            ],
+            "vue/max-attributes-per-line": [
+                "error",
+                {
+                    "singleline": 4,
+                    "multiline": {
+                        "max": 4,
+                        "allowFirstLine": false
+                    }
+                }
+            ]
+        },
+        "env": {
+            "node": true,
+            "browser": true,
+            "commonjs": true,
+            "es6": true,
+            "jquery": true
+        },
+        "globals": {
+            "process": true,
+            "config": true
+        }
     }
 }

@@ -1,33 +1,22 @@
 const defaultTheme = require('tailwindcss/defaultTheme');
 
 module.exports = {
+    mode: 'jit',
+    purge: [
+        './vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php',
+        './vendor/laravel/jetstream/**/*.blade.php',
+        './storage/framework/views/*.php',
+        './resources/views/**/*.blade.php',
+        './resources/js/**/*.vue',
+    ],
+
     theme: {
         extend: {
             fontFamily: {
-                sans: ['Inter var', ...defaultTheme.fontFamily.sans],
+                sans: ['Nunito', ...defaultTheme.fontFamily.sans],
             },
         },
     },
-    variants: {},
-    purge: {
-        content: [
-            './app/**/*.php',
-            './resources/**/*.html',
-            './resources/**/*.js',
-            './resources/**/*.jsx',
-            './resources/**/*.ts',
-            './resources/**/*.tsx',
-            './resources/**/*.php',
-            './resources/**/*.vue',
-            './resources/**/*.twig',
-        ],
-        options: {
-            defaultExtractor: (content) => content.match(/[\w-/.:]+(?<!:)/g) || [],
-            whitelistPatterns: [/-active$/, /-enter$/, /-leave-to$/, /show$/],
-        },
-    },
-    plugins: [
-        require('@tailwindcss/custom-forms'),
-        require('@tailwindcss/ui'),
-    ],
+
+    plugins: [require('@tailwindcss/forms'), require('@tailwindcss/typography')],
 };

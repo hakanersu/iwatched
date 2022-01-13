@@ -12,6 +12,11 @@ abstract class Importer
 
     protected $gzPath;
 
+    /**
+     * The output interface implementation.
+     *
+     * @var \Illuminate\Console\OutputStyle
+     */
     protected $output;
 
     public function __construct()

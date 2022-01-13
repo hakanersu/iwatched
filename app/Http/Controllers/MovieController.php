@@ -2,38 +2,43 @@
 
 namespace App\Http\Controllers;
 
-use App\Movie;
-use App\Name;
-use App\Title;
-use App\Watched\Traits\TitleFilter;
+use App\Models\Movie;
+use App\Models\Name;
+use Inertia\Inertia;
 
 class MovieController extends Controller
 {
-    use TitleFilter;
 
     public function index()
     {
-        $movies = $this->filter()->simplePaginate(10);
-
-        $movies->each(function ($movie) {
-            $this->checkPoster($movie);
+        $movies = Movie::with(['poster'])->filter()->simplePaginate(8)->through(function ($movie) {
+            $movie->poster->fetched = true;
+            if ($movie->poster->image === 'movie.png') {
+                $movie->poster->image = Movie::tmdb($movie->tconst);
+                $movie->poster->fetched = false;
+            }
+            return $movie;
         });
 
-        return view('movies', compact('movies'));
+        return Inertia::render('Movies/MovieIndex', [
+            'movies' => $movies,
+            'type' => 'movies'
+        ]);
     }
 
     public function show($id)
     {
-        $title = Title::with('crew', 'principal', 'principal.name','poster','watched', 'rating')
+        $movie = Movie::with('crew', 'principal', 'principal.name', 'poster', 'watched', 'rating')
             ->where('tconst', $id)
             ->firstOrFail();
 
+        $directors = Name::whereIn('nconst', explode(',', $movie->crew->directors))->get();
+        $writers = Name::whereIn('nconst', explode(',', $movie->crew->writers))->get();
 
-        $directors = Name::whereIn('nconst',explode(',', $title->crew->directors))->get();
-        $writers = Name::whereIn('nconst', explode(',', $title->crew->writers))->get();
-
-        return view('show', compact('title', 'directors', 'writers'));
+        return Inertia::render('Movies/MovieShow', [
+            'movie' => $movie,
+            'directors' => $directors,
+            'writers' => $writers,
+        ]);
     }
-
-
 }

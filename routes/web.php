@@ -1,18 +1,25 @@
 <?php
 
+use App\Http\Controllers\MovieController;
+use App\Http\Controllers\SeriesController;
+use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
+use Inertia\Inertia;
 
-Route::view('/', 'welcome');
 
-Route::auth();
-
-Route::middleware('auth')->group(function () {
-    Route::resource('/watched', 'WatchedController');
-	Route::resource('/movies', 'MovieController');
-	Route::resource('/series', 'SeriesController');
-	Route::get('/dashboard', 'DashboardController@index')->name('home');
-	Route::get('search', 'SearchController@search')->name('search');
-	//Route::redirect('home', '/dashboard');
+Route::get('/', function () {
+    return Inertia::render('Welcome', [
+        'canLogin' => Route::has('login'),
+        'canRegister' => Route::has('register'),
+        'laravelVersion' => Application::VERSION,
+        'phpVersion' => PHP_VERSION,
+    ]);
 });
 
-
+Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
+    return Inertia::render('Dashboard');
+})->name('dashboard');
+Route::middleware(['auth:sanctum', 'verified'])->resource('/movies', MovieController::class);
+Route::middleware(['auth:sanctum', 'verified'])->resource('/series', SeriesController::class);
+Route::middleware(['auth:sanctum', 'verified'])->get('/search', [\App\Http\Controllers\SearchController::class, 'search']);
+Route::middleware(['auth:sanctum', 'verified'])->put('/token', [\App\Http\Controllers\TokenController::class, 'update'])->name('token');

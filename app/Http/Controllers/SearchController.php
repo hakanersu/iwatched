@@ -2,26 +2,37 @@
 
 namespace App\Http\Controllers;
 
-use App\Title;
 use App\Watched;
-use Elasticsearch\ClientBuilder;
 use Illuminate\Http\Request;
 
 class SearchController extends Controller
 {
-    public function search()
+    public function search(Request $request)
     {
-        $imdbIdSearch = $this->searchImdbId();
+        $query = $request->get('q');
 
-        if ($imdbIdSearch) {
-            return $imdbIdSearch;
+        if (!$query || $query === '') {
+            return response()->json([
+                'results' => [],
+            ]);
         }
 
-        if (!config('movie.elasticsearch')) {
-            return $this->regularSearch();
-        }
+        $results = \DB::select(
+            "SELECT
+                primary_title,
+                title_type,
+                start_year,
+                tconst
+            FROM
+                 titles,
+                 plainto_tsquery('".$query."') AS q
+            WHERE
+                (tsv_title_text @@ q) and
+                (title_type = 'movie' or title_type='tvSeries')
+                ORDER BY weight DESC LIMIT 15;"
+        );
 
-        return $this->searchInElasticsearch();
+        return response()->json($results);
     }
 
     public function regularSearch()
@@ -36,15 +47,15 @@ class SearchController extends Controller
 
         preg_match('/:year\s(\d{4})/m', $name, $output_array);
 
-        if (count($output_array)>0 && $output_array[1]) {
+        if (count($output_array) > 0 && $output_array[1]) {
             $titles->where('start_year', $output_array[1]);
             $name = trim(str_replace($output_array[0], "", $name));
         }
 
-        $titles  = $titles->where('original_title', 'ILIKE', "%{$name}");
+        $titles = $titles->where('original_title', 'ILIKE', "%{$name}");
 
-        $watched = cache()->remember("users_watched_".auth()->id(), 60, function() {
-            return Watched::where('title_type', '!=','tvEpisode')
+        $watched = cache()->remember("users_watched_" . auth()->id(), 60, function () {
+            return Watched::where('title_type', '!=', 'tvEpisode')
                 ->select('tconst')
                 ->get()
                 ->pluck('tconst')
@@ -56,14 +67,14 @@ class SearchController extends Controller
         $titles = $titles->take(10)->get();
 
         return response()->json([
-            'titles' => $titles->map(function ($item) use($watched) {
-                $title =  [
-                    "original_title"=> $item->original_title,
-                    "start_year"=> $item->start_year,
-                    "weight"=> $item->weight,
-                    "primary_title"=> $item->primary_title,
-                    "title_type"=> $item->title_type,
-                    "tconst"=> $item->tconst,
+            'titles' => $titles->map(function ($item) use ($watched) {
+                $title = [
+                    "original_title" => $item->original_title,
+                    "start_year" => $item->start_year,
+                    "weight" => $item->weight,
+                    "primary_title" => $item->primary_title,
+                    "title_type" => $item->title_type,
+                    "tconst" => $item->tconst,
                     "watched" => false
                 ];
 
@@ -86,7 +97,7 @@ class SearchController extends Controller
 
         preg_match('/:year\s(\d{4})/m', $name, $output_array);
 
-        if (count($output_array)>0 && $output_array[1]) {
+        if (count($output_array) > 0 && $output_array[1]) {
             $search = trim(str_replace($output_array[0], "", $name));
             $elasticQuery['query']['bool']['must'][0]['multi_match']['query'] = strtolower($search);
             $elasticQuery['query']['bool']['must'][1]['match']['start_year'] = $output_array[1];
@@ -103,8 +114,8 @@ class SearchController extends Controller
 
         $results = $client->search($params);
 
-        $watched = cache()->remember("users_watched_".auth()->id(), 60, function() {
-            return Watched::where('title_type', '!=','tvEpisode')
+        $watched = cache()->remember("users_watched_" . auth()->id(), 60, function () {
+            return Watched::where('title_type', '!=', 'tvEpisode')
                 ->select('tconst')
                 ->get()
                 ->pluck('tconst')
@@ -114,7 +125,7 @@ class SearchController extends Controller
         $hits = collect($results['hits']['hits']);
 
         return response()->json([
-            'titles' => $hits->map(function ($item) use($watched) {
+            'titles' => $hits->map(function ($item) use ($watched) {
                 $item['_source']['watched'] = false;
                 // its not a good way. Maybe i have to index watched model with laravel
                 // scout and cross check in elastic search.
@@ -130,7 +141,7 @@ class SearchController extends Controller
     {
         preg_match('/(tt(.*?)) :imdb/m', request('search'), $imdbOutput);
 
-        if (count($imdbOutput)<=0 || !isset($imdbOutput[1])) {
+        if (count($imdbOutput) <= 0 || !isset($imdbOutput[1])) {
             return false;
         }
 
@@ -141,14 +152,14 @@ class SearchController extends Controller
         }
 
         $response = [
-            'titles' =>[
+            'titles' => [
                 [
-                    "original_title"=> $imdb->original_title,
-                    "start_year"=> $imdb->start_year,
-                    "weight"=> $imdb->weight,
-                    "primary_title"=> $imdb->primary_title,
-                    "title_type"=> $imdb->title_type,
-                    "tconst"=> $imdb->tconst
+                    "original_title" => $imdb->original_title,
+                    "start_year" => $imdb->start_year,
+                    "weight" => $imdb->weight,
+                    "primary_title" => $imdb->primary_title,
+                    "title_type" => $imdb->title_type,
+                    "tconst" => $imdb->tconst
                 ]
             ]
         ];

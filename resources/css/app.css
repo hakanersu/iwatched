@@ -1,0 +1,55 @@
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+
+body {
+    overflow-y: scroll;
+}
+.poster-card, .movie-card {
+    transition: background 600ms ease-in;
+}
+.poster {
+    mask-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, black), color-stop(0.35, black), color-stop(0.5, black), color-stop(0.65, black), color-stop(0.85, rgba(0, 0, 0, 0.6)), color-stop(1, transparent));
+}
+.poster-green {
+    mask-image:
+        linear-gradient(
+            #049a42 0%,
+            #049a42 35%,
+            #049a42 50%,
+            #049a42 65%,
+            rgba(81, 255, 0, 0.6) 85%,
+            rgba(0, 0, 0, 0) 100%
+        )
+}
+.search-input {
+    background: #f5f5fa;
+}
+
+.triangle:after {
+    content: '';
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-width: 0 40px 40px 0;
+    border-color: transparent #608A32 transparent transparent;
+    right: 0;
+    top: 0;
+    z-index: -1;
+    position: absolute;
+}
+
+.comma-list {
+    display: inline;
+    list-style: none;
+    padding: 0px;
+}
+.comma-list li {
+    display: inline;
+}
+.comma-list li::after {
+    content: ", ";
+}
+.comma-list li:last-child::after {
+    content: "";
+}

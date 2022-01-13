@@ -13,16 +13,22 @@ class TitleImporter extends Importer implements  ImporterInterface
 
     public function start(): ImporterInterface
     {
-        $this->output->writeln('<info>Importing titles, may take some time</info>');
+        $now = now();
+
+        $this->output->writeln('<info>Importing titles, may take some time.</info>');
 
         DB::statement("COPY titles(tconst,title_type,primary_title,original_title,is_adult,start_year,end_year,runtime_minutes,genres) FROM '{$this->tsvPath}'");
+
+        $this->output->writeln('<comment>Importing titles finished in '.TimePassed::took($now).'.</comment>');
 
         return $this;
     }
 
     public function index(): ImporterInterface
     {
-        $this->output->writeln('<info>Title cleanup and indexing, may take some time</info>');
+        $now = now();
+
+        $this->output->writeln('<info>Title cleanup and indexing, it will take more time than importing titles.</info>');
 
         $primary_title = DB::select(DB::raw('select id,primary_title,length(primary_title) from titles where length(primary_title) >= 255 order by length(primary_title) DESC'));
         foreach($primary_title as $title) {
@@ -48,10 +54,15 @@ class TitleImporter extends Importer implements  ImporterInterface
             $table->string('original_title')->change();
         });
 
-        $this->output->writeln('<info>Updating title columns.</info>');
+        $this->output->writeln('<comment>Title update process finished in '.TimePassed::took($now).'</comment>');
+        $this->output->writeln('<info>Casting columns to correct types.</info>');
+        $now = now();
+
         DB::raw(DB::statement('ALTER TABLE titles ALTER COLUMN start_year TYPE integer USING (start_year::integer)'));
         DB::raw(DB::statement('ALTER TABLE titles ALTER COLUMN end_year TYPE integer USING (end_year::integer)'));
         DB::raw(DB::statement('ALTER TABLE titles ALTER COLUMN runtime_minutes TYPE integer USING (runtime_minutes::integer)'));
+
+        $this->output->writeln('<comment>Casting columns process finished in '.TimePassed::took($now).'.</comment>');
 
         return $this;
     }

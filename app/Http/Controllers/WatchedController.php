@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Watched;
+use App\Models\Watched;
 use App\Title;
 use Illuminate\Http\Request;
 
@@ -11,12 +11,12 @@ class WatchedController extends Controller
     public function index()
     {
         $items = Watched::with(['title', 'title.rating'])
-            ->join('titles', 'watched.tconst', '=', 'titles.tconst')
+            ->join('titles', 'watched.tconst_id', '=', 'titles.tconst')
             ->whereIn('titles.title_type', ['movie', 'tvSeries'])
-            ->orderByDesc('titles.start_year')
+            ->orderByDesc('watched.created_at')
             ->paginate(10);
 
-        return view('watched', [
+        return view('watched.index', [
             'items' => $items
         ]);
     }
