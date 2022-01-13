@@ -41,9 +41,9 @@ export default {
                 } else {
                     newValue.splice(newValue.indexOf(this.value), 1)
                 }
-                this.$emit('change', newValue)
+                this.$emit('input', newValue)
             } else {
-                this.$emit('change', isChecked ? this.trueValue : this.falseValue)
+                this.$emit('input', isChecked ? this.trueValue : this.falseValue)
             }
         }
     }

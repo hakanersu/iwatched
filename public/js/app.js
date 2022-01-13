@@ -19239,9 +19239,9 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
           newValue.splice(newValue.indexOf(this.value), 1);
         }
 
-        this.$emit('change', newValue);
+        this.$emit('input', newValue);
       } else {
-        this.$emit('change', isChecked ? this.trueValue : this.falseValue);
+        this.$emit('input', isChecked ? this.trueValue : this.falseValue);
       }
     }
   }
@@ -21687,11 +21687,14 @@ __webpack_require__.r(__webpack_exports__);
     },
     totalSeasons: function totalSeasons() {
       return this.seasonsNumbers.length;
+    },
+    isSeriesWatched: function isSeriesWatched() {
+      return !!this.series.watched;
     }
   },
   data: function data() {
     return {
-      selected: [],
+      selected: {},
       selectedSeason: 1,
       showDropdown: false
     };
@@ -27325,12 +27328,11 @@ var _hoisted_33 = {
 var _hoisted_34 = {
   "class": "max-h-48 overflow-y-auto p-2"
 };
-
-var _hoisted_35 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
+var _hoisted_35 = {
   "class": "bg-gray-200 text-sm py-1 px-1 rounded select-none text-gray-700 inline-block flex items-center"
-}, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
-  "class": "rounded px-2 py-1 hover:bg-white hover:shadow hover:text-green-700 font-medium focus:outline-none"
-}, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("svg", {
+};
+
+var _hoisted_36 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("svg", {
   "class": "w-5 h-5",
   fill: "none",
   stroke: "currentColor",
@@ -27341,18 +27343,19 @@ var _hoisted_35 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElement
   "stroke-linejoin": "round",
   "stroke-width": "2",
   d: "M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-})])])], -1
+})], -1
 /* HOISTED */
 );
 
-var _hoisted_36 = {
+var _hoisted_37 = [_hoisted_36];
+var _hoisted_38 = {
   key: 0,
   "class": "border-t border-gray-200"
 };
-var _hoisted_37 = {
+var _hoisted_39 = {
   "class": "w-full"
 };
-var _hoisted_38 = {
+var _hoisted_40 = {
   "class": "text-xs opacity-50"
 };
 function render(_ctx, _cache, $props, $setup, $data, $options) {
@@ -27405,10 +27408,11 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
           active: Number(season) === _ctx.selectedSeason,
           onClick: function onClick($event) {
             return _ctx.selectedSeason = Number(season);
-          }
+          },
+          watched: _ctx.isSeriesWatched
         }, null, 8
         /* PROPS */
-        , ["label", "active", "onClick"])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)], 64
+        , ["label", "active", "onClick", "watched"])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)], 64
         /* STABLE_FRAGMENT */
         );
       }), 128
@@ -27444,25 +27448,28 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
         );
       }), 128
       /* KEYED_FRAGMENT */
-      ))])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                                <season-tab label=\"Season 2\" :active=\"true\" />"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                                <season-tab label=\"Season 3\" :watched=\"true\" />")]), _hoisted_35]), ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)(_ctx.seasons, function (episodes, index) {
+      ))])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                                <season-tab label=\"Season 2\" :active=\"true\" />"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                                <season-tab label=\"Season 3\" :watched=\"true\" />")]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_35, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
+        "class": (0,vue__WEBPACK_IMPORTED_MODULE_0__.normalizeClass)(["rounded px-2 py-1 hover:bg-white hover:shadow hover:text-green-700 font-medium focus:outline-none", [_ctx.series.watched ? 'bg-white shadow text-green-700' : '']])
+      }, _hoisted_37, 2
+      /* CLASS */
+      )])]), ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)(_ctx.seasons, function (episodes, index) {
         return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, {
           key: "season-".concat(index)
-        }, [Number(_ctx.selectedSeason) === Number(index) ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_36, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("table", _hoisted_37, [((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)(episodes, function (episode, index) {
+        }, [Number(_ctx.selectedSeason) === Number(index) ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_38, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("table", _hoisted_39, [((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)(episodes, function (episode, index) {
           return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("tr", {
             key: episode.id
           }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", {
             "class": (0,vue__WEBPACK_IMPORTED_MODULE_0__.normalizeClass)(["px-4 py-5 whitespace-nowrap", [index % 2 === 0 ? 'bg-gray-50' : 'bg-white']])
           }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_i_check, {
-            name: "1",
-            value: "1",
-            modelValue: _ctx.selected,
-            "onUpdate:modelValue": _cache[1] || (_cache[1] = function ($event) {
-              return _ctx.selected = $event;
-            }),
+            name: "episode-".concat(episode.tconst),
+            modelValue: _ctx.selected[episode.tconst],
+            "onUpdate:modelValue": function onUpdateModelValue($event) {
+              return _ctx.selected[episode.tconst] = $event;
+            },
             label: episode.original_title
           }, null, 8
           /* PROPS */
-          , ["modelValue", "label"])], 2
+          , ["name", "modelValue", "onUpdate:modelValue", "label"])], 2
           /* CLASS */
           ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", {
             "class": (0,vue__WEBPACK_IMPORTED_MODULE_0__.normalizeClass)(["px-4 text-gray-800 w-full max-w-0", [index % 2 === 0 ? 'bg-gray-50' : 'bg-white']])
@@ -27470,7 +27477,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
           /* TEXT, CLASS */
           ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", {
             "class": (0,vue__WEBPACK_IMPORTED_MODULE_0__.normalizeClass)(["px-4 text-gray-600 whitespace-nowrap", [index % 2 === 0 ? 'bg-gray-50' : 'bg-white']])
-          }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_38, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)("S".concat(episode.season_number, "E").concat(episode.episode_number)), 1
+          }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_40, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)("S".concat(episode.season_number, "E").concat(episode.episode_number)), 1
           /* TEXT */
           )], 2
           /* CLASS */

@@ -81,7 +81,13 @@
                         <div class="px-4 py-5 sm:px-6 flex justify-between items-center">
                             <div class="flex space-x-3">
                                 <template v-for="season in seasonsNumbers" :key="season">
-                                    <season-tab :label="`Season ${season}`" :active="Number(season) === selectedSeason" @click="selectedSeason = Number(season)" v-if="Number(season) <8"/>
+                                    <season-tab
+                                        :label="`Season ${season}`"
+                                        :active="Number(season) === selectedSeason"
+                                        @click="selectedSeason = Number(season)"
+                                        v-if="Number(season) <8"
+                                        :watched="isSeriesWatched"
+                                    />
                                 </template>
                                 <div v-if="seasonsNumbers.length>8">
                                     <div class="relative inline-block text-left">
@@ -111,6 +117,7 @@
                                 class="bg-gray-200 text-sm py-1 px-1 rounded select-none text-gray-700 inline-block flex items-center">
                                 <button
                                     class="rounded px-2 py-1 hover:bg-white hover:shadow hover:text-green-700 font-medium focus:outline-none"
+                                    :class="[series.watched ? 'bg-white shadow text-green-700': '']"
                                 >
                                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"
                                          xmlns="http://www.w3.org/2000/svg">
@@ -126,7 +133,7 @@
                                     <template v-for="(episode, index) in episodes" :key="episode.id">
                                         <tr >
                                             <td class="px-4 py-5 whitespace-nowrap" :class="[index % 2 === 0 ? 'bg-gray-50' : 'bg-white']">
-                                                <i-check name="1" value="1" v-model="selected" :label="episode.original_title"/>
+                                                <i-check :name="`episode-${episode.tconst}`"  v-model="selected[episode.tconst]" :label="episode.original_title"/>
                                             </td>
                                             <td class=" px-4 text-gray-800 w-full max-w-0" :class="[index % 2 === 0 ? 'bg-gray-50' : 'bg-white']">
                                                 {{ episode.original_title }}
@@ -184,10 +191,13 @@ export default defineComponent({
         },
         totalSeasons () {
             return this.seasonsNumbers.length
+        },
+        isSeriesWatched () {
+            return !!this.series.watched
         }
     },
     data: () => ({
-        selected: [],
+        selected: {},
         selectedSeason: 1,
         showDropdown: false
     })

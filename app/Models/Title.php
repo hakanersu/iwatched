@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Facades\Http;
-use Laravel\Scout\Searchable;
+
 /**
  * @property mixed title_type
  * @property mixed tconst
@@ -98,5 +98,11 @@ class Title extends Model
         }
 
         return $url;
+    }
+
+    public function watched(): HasOne
+    {
+        return $this->hasOne(Watched::class, 'tconst_id', 'tconst')
+            ->where('user_id', auth()->id());
     }
 }
