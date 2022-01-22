@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Movie;
 use App\Models\Name;
+use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class MovieController extends Controller
@@ -40,5 +41,31 @@ class MovieController extends Controller
             'directors' => $directors,
             'writers' => $writers,
         ]);
+    }
+
+    public function watch(Request $request)
+    {
+        auth()->user()->watched()->firstOrCreate(
+            [
+                'tconst_id' => $request->get('tconst'),
+                'title_type' => Movie::class,
+                'user_id' => auth()->id(),
+            ],
+            [
+            'watched_at' => now(),
+            'created_at' => now(),
+            'updated_at' => now(),
+            ]
+        );
+
+        return back();
+    }
+
+    public function unwatch(Request $request)
+    {
+        auth()->user()->watched()->where('tconst_id', $request->get('tconst'))
+            ->where('title_type', Movie::class)->delete();
+
+        return back();
     }
 }

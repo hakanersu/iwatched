@@ -18,6 +18,11 @@ mix.js('resources/js/app.js', 'public/js').vue()
     ])
     .webpackConfig(require('./webpack.config'));
 
+mix.browserSync({
+    proxy: 'laravel.test',
+    host: 'laravel.test',
+    open: 'external'
+});
 if (mix.inProduction()) {
     mix.version();
 }

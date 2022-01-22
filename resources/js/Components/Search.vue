@@ -14,7 +14,7 @@
                 v-model="searching"
             >
         </div>
-        <div v-if="results.length>0" class="absolute z-10 inset-x-0 px-6 py-3  mt-4 overflow-y-auto bg-white border border-gray-300 rounded-md max-h-72 dark:bg-gray-800 dark:border-transparent">
+        <div v-if="results.length>0" class="absolute z-50 inset-x-0 px-6 py-3  mt-4 overflow-y-auto bg-white border border-gray-300 rounded-md max-h-72 dark:bg-gray-800 dark:border-transparent">
             <div class="relative h-full w-full h-32 flex items-center justify-center" v-if="loading">
                 <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-gray-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                     <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
@@ -22,7 +22,7 @@
                 </svg>
             </div>
            <template v-else>
-               <a href="#" class="flex justify-between py-1" v-for="result in results">
+               <a :href="getUrl(result)" class="flex justify-between py-1" v-for="result in results">
                    <h3 class="font-medium text-gray-700 dark:text-gray-100 hover:underline">{{ result.primary_title }}</h3>
                    <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">{{ result.start_year }} | 7.3 | {{ result.title_type }}</p>
                </a>
@@ -50,6 +50,9 @@ export default defineComponent({
     },
 
     methods: {
+        getUrl (result) {
+            return result.title_type === 'movie' ? `/movies/${result.tconst}` : `/series/${result.tconst}`
+        },
         search: debounce(function () {
             this.loading = true
             fetch('/search?q=' + this.searching)

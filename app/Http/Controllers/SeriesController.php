@@ -47,7 +47,7 @@ class SeriesController extends Controller
                 'titles.tconst',
                 'titles.original_title',
                 'titles.runtime_minutes',
-                'titles.primary_title'
+                'titles.primary_title',
             ])
             ->leftJoin('titles', 'episodes.tconst', '=', 'titles.tconst')
             ->where('parent_tconst', $id)
