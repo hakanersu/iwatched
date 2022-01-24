@@ -41,7 +41,7 @@
         </Link>
         <div class="flex items-center justify-between py-5 px-5 text-gray-200 text-lg relative pt-16">
             <Link
-                :href="`/${type}/1`"
+                :href="`/${type}/${movie.tconst}`"
                 class="text-gray-300 hover:text-gray-100"
             >
                 {{ movie.primary_title }}
