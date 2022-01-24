@@ -11,6 +11,10 @@ class SearchController extends Controller
     {
         $query = $request->get('q');
 
+        return response()->json([
+            'results' => [],
+        ]);
+
         if (!$query || $query === '') {
             return response()->json([
                 'results' => [],
