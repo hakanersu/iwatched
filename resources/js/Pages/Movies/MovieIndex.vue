@@ -19,9 +19,9 @@
                 />
             </div>
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 flex justify-between mt-5">
-                <Link class="inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:ring focus:ring-gray-300 disabled:opacity-25 transition" :href="`/${type}?page=${movies.current_page-1}`" v-if="movies.current_page>1">Previous</Link>
+                <Link class="inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:ring focus:ring-gray-300 disabled:opacity-25 transition" :href="prevPage(movies)" v-if="movies.current_page>1">Previous</Link>
                 <span v-else></span>
-                <Link class="inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:ring focus:ring-gray-300 disabled:opacity-25 transition" :href="`/${type}?page=${movies.current_page+1}`">Next</Link>
+                <Link class="inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:ring focus:ring-gray-300 disabled:opacity-25 transition" :href="nextPage(movies)">Next</Link>
             </div>
         </div>
     </app-layout>
@@ -53,5 +53,30 @@ export default defineComponent({
         Filters,
         Link
     },
+    methods: {
+        nextPage (movie) {
+           return this.page(movie, 1)
+        },
+        prevPage (movie) {
+            return this.page(movie, -2)
+        },
+        page (movie, page) {
+            const urlParams = new URLSearchParams(window.location.search);
+            let url = `/${this.type}?page=${movie.current_page+page}`
+            const year = urlParams.get("year")
+            if (year) {
+                url += `&year=${year}`
+            }
+            const rating = urlParams.get("rating");
+            if (rating) {
+                url += `&rating=${rating}`
+            }
+            const not_watched = urlParams.get("not_watched");
+            if (not_watched) {
+                url += `&not_watched=${not_watched}`
+            }
+            return url
+        }
+    }
 })
 </script>
