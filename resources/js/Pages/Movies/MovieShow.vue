@@ -13,8 +13,8 @@
                             href="/movies/1"
                         >
                             <img
-                                src="https://m.media-amazon.com/images/M/MV5BOTY2NzFjODctOWUzMC00MGZhLTlhNjMtM2Y2ODBiNGY1ZWRiXkEyXkFqcGdeQXVyMDM2NDM2MQ@@._V1_.jpg"
-                                alt="Free Guy"
+                                :src="`/storage/posters/${movie.poster.image}`"
+                                :alt="movie.original_title"
                             >
                         </div>
                             <movie-watched-button />
