@@ -58,7 +58,7 @@ export default defineComponent({
            return this.page(movie, 1)
         },
         prevPage (movie) {
-            return this.page(movie, -2)
+            return this.page(movie, -1)
         },
         page (movie, page) {
             const urlParams = new URLSearchParams(window.location.search);
