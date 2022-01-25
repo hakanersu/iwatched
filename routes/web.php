@@ -38,3 +38,4 @@ Route::middleware(['auth:sanctum', 'verified'])->post('/series/watch', [\App\Htt
 Route::middleware(['auth:sanctum', 'verified'])->post('/series/unwatch', [\App\Http\Controllers\Series\UnwatchController::class, 'title']);
 Route::middleware(['auth:sanctum', 'verified'])->post('/movies/watch', [MovieController::class, 'watch']);
 Route::middleware(['auth:sanctum', 'verified'])->post('/movies/unwatch', [MovieController::class, 'unwatch']);
+Route::middleware(['auth:sanctum', 'verified'])->post('/check-poster', [\App\Http\Controllers\PosterController::class, 'check']);

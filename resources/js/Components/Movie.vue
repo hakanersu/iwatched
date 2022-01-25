@@ -37,7 +37,7 @@
             <img
                 :src="src"
                 alt="Free Guy"
-                @error="reloadImage(src)"
+                @error="reloadImage(movie.tconst)"
             >
         </Link>
         <div class="flex items-center justify-between py-5 px-5 text-gray-200 text-lg relative pt-16">
