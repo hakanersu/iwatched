@@ -60,7 +60,7 @@ import {defineComponent} from 'vue'
 import {Link} from '@inertiajs/inertia-vue3'
 import Star from '@/Components/Star.vue'
 import MovieWatchedButton from "./MovieWatchedButton"
-
+import axios from 'axios'
 export default defineComponent({
     props: {
         active: {
@@ -101,8 +101,8 @@ export default defineComponent({
                 resetOnSuccess: false
             })
         },
-        reloadImage(src) {
-            console.log(src)
+        reloadImage(id) {
+           axios.post('/check-poster', {tconst: id})
         }
     }
 })
