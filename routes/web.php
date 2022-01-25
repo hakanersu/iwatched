@@ -11,8 +11,18 @@ Route::get('/', function () {
     return Inertia::render('Welcome', [
         'canLogin' => Route::has('login'),
         'canRegister' => Route::has('register'),
-        'laravelVersion' => Application::VERSION,
-        'phpVersion' => PHP_VERSION,
+        'titles' => cache()->rememberForever('titles', function () {
+            return number_format(\App\Models\Title::count());
+        }),
+        'movies' => cache()->rememberForever('movies', function () {
+            return number_format(\App\Models\Title::where('title_type', 'movie')->count());
+        }),
+        'series' => cache()->rememberForever('series', function () {
+            return number_format(\App\Models\Title::where('title_type', 'tvSeries')->count());
+        }),
+        'episodes' => cache()->rememberForever('episodes', function () {
+            return number_format(\App\Models\Title::where('title_type', 'tvEpisode')->count());
+        }),
     ]);
 });
 
