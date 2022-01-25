@@ -37,6 +37,7 @@
             <img
                 :src="src"
                 alt="Free Guy"
+                @error="reloadImage(src)"
             >
         </Link>
         <div class="flex items-center justify-between py-5 px-5 text-gray-200 text-lg relative pt-16">
@@ -99,6 +100,9 @@ export default defineComponent({
             }, {
                 resetOnSuccess: false
             })
+        },
+        reloadImage(src) {
+            console.log(src)
         }
     }
 })
