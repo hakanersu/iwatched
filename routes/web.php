@@ -26,9 +26,7 @@ Route::get('/', function () {
     ]);
 });
 
-Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
-    return Inertia::render('Dashboard');
-})->name('dashboard');
+Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard',[\App\Http\Controllers\DashboardController::class, 'index'])->name('dashboard');
 Route::middleware(['auth:sanctum', 'verified'])->resource('/movies', MovieController::class);
 Route::middleware(['auth:sanctum', 'verified'])->resource('/series', SeriesController::class);
 Route::middleware(['auth:sanctum', 'verified'])->get('/search', [\App\Http\Controllers\SearchController::class, 'search']);
