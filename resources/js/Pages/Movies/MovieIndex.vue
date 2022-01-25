@@ -11,12 +11,14 @@
 
         <div class="py-12">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 grid grid-cols-4 gap-4">
+                <template  v-for="movie in movies.data" :key="movie.tconst">
                 <movie
-                    v-for="movie in movies.data"
+
                     :src="movie.poster.fetched ? `/storage/posters/${movie.poster.image}` : movie.poster.image"
                     :movie="movie"
                     :type="type"
                 />
+                </template>
             </div>
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 flex justify-between mt-5">
                 <Link class="inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:ring focus:ring-gray-300 disabled:opacity-25 transition" :href="prevPage(movies)" v-if="movies.current_page>1">Previous</Link>

@@ -96,6 +96,8 @@ export default defineComponent({
             const endPoint = this.watched ? `/${this.type}/watch` : `/${this.type}/unwatch`;
             this.$inertia.post(endPoint, {tconst: this.movie.tconst}, {
                 preserveScroll: true,
+            }, {
+                resetOnSuccess: false
             })
         }
     }
