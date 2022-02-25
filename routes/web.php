@@ -29,11 +29,11 @@ Route::get('/', function () {
     ]);
 });
 
-Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard',[DashboardController::class, 'index'])->name('dashboard');
-Route::middleware(['auth:sanctum', 'verified'])->resource('/movies', MovieController::class);
-Route::middleware(['auth:sanctum', 'verified'])->resource('/series', SeriesController::class);
-Route::middleware(['auth:sanctum', 'verified'])->get('/search', [SearchController::class, 'search']);
-Route::middleware(['auth:sanctum', 'verified'])->put('/token', [TokenController::class, 'update'])->name('token');
+Route::middleware(['auth:sanctum'])->get('/dashboard',[DashboardController::class, 'index'])->name('dashboard');
+Route::middleware(['auth:sanctum'])->resource('/movies', MovieController::class);
+Route::middleware(['auth:sanctum'])->resource('/series', SeriesController::class);
+Route::middleware(['auth:sanctum'])->get('/search', [SearchController::class, 'search']);
+Route::middleware(['auth:sanctum'])->put('/token', [TokenController::class, 'update'])->name('token');
 
-Route::middleware(['auth:sanctum', 'verified'])->post('/watch', \App\Http\Controllers\WatchController::class);
-Route::middleware(['auth:sanctum', 'verified'])->post('/check-poster', [PosterController::class, 'check']);
+Route::middleware(['auth:sanctum'])->post('/watch', \App\Http\Controllers\WatchController::class);
+Route::middleware(['auth:sanctum'])->post('/check-poster', [PosterController::class, 'check']);
