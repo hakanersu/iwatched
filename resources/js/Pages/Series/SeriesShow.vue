@@ -240,12 +240,31 @@ export default defineComponent({
     },
     methods: {
         watchEpisode(e) {
-            const endPoint = e.target.checked ? '/series/watch' : '/series/unwatch';
+            const action = e.target.checked ? 'watch' : 'unwatch';
 
-            this.$inertia.post(endPoint, { tconst: e.target.value}, {
+            this.$inertia.post('/episodes', {
+                tconst: e.target.value,
+                action: action,
+                type: 'episode'
+            }, {
                 preserveScroll: true,
             })
 
+        },
+        markAllWatched() {
+            const action =this.isAllWatched ? 'unwatch-all' : 'watch-all';
+
+            this.$inertia.post('/episodes', {
+                tconst: this.series.tconst,
+                action: action,
+                type: 'series'
+            }, {
+                preserveScroll: true,
+            })
+
+            Object.keys(this.seasons).forEach((item) => {
+                this.toggle(item,false)
+            })
         },
         toggle(season, request = true) {
             const episodes = this.seasons[season].map(item => item.tconst)
@@ -262,9 +281,13 @@ export default defineComponent({
             })
 
             if (request) {
-                const endPoint = this.watchedSeasons[season] ? '/unwatch-all' : '/watch-all';
-
-                this.$inertia.post(endPoint, { tconst: this.series.tconst, season: season + 1}, {
+                const action = this.watchedSeasons[season] ? 'unwatch-all' : 'watch-all';
+                this.$inertia.post('/episodes', {
+                    tconst: this.series.tconst,
+                    season: season + 1,
+                    action: action,
+                    type: 'series',
+                }, {
                     preserveScroll: true,
                 })
             }
@@ -290,17 +313,6 @@ export default defineComponent({
         parse(value) {
             return JSON.stringify(JSON.parse(value));
         },
-        markAllWatched() {
-            const endPoint = this.isAllWatched ? '/unwatch-all' : '/watch-all';
-
-            this.$inertia.post(endPoint, { tconst: this.series.tconst}, {
-                preserveScroll: true,
-            })
-
-            Object.keys(this.seasons).forEach((item) => {
-                this.toggle(item,false)
-            })
-        }
     }
 })
 </script>

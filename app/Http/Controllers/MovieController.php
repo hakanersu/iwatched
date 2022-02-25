@@ -4,13 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Models\Movie;
 use App\Models\Name;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class MovieController extends Controller
 {
 
-    public function index()
+    public function index(): \Inertia\Response
     {
         $movies = Movie::with(['poster'])->filter()->simplePaginate(8)->through(function ($movie) {
             $movie->poster->fetched = true;
@@ -27,7 +28,7 @@ class MovieController extends Controller
         ]);
     }
 
-    public function show($id)
+    public function show($id): \Inertia\Response
     {
         $movie = Movie::with('crew', 'principal', 'principal.name', 'poster', 'watched', 'rating')
             ->where('tconst', $id)
@@ -45,7 +46,10 @@ class MovieController extends Controller
 
     public function watch(Request $request)
     {
-        auth()->user()->watched()->firstOrCreate(
+        /** @var User $user */
+        $user = auth()->user();
+
+        $user->watched()->firstOrCreate(
             [
                 'tconst_id' => $request->get('tconst'),
                 'title_type' => Movie::class,
@@ -63,7 +67,10 @@ class MovieController extends Controller
 
     public function unwatch(Request $request)
     {
-        auth()->user()->watched()->where('tconst_id', $request->get('tconst'))
+        /** @var User $user */
+        $user = auth()->user();
+
+        $user->watched()->where('tconst_id', $request->get('tconst'))
             ->where('title_type', Movie::class)->delete();
 
         return back();

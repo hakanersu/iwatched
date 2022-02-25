@@ -7,7 +7,7 @@ use Inertia\Inertia;
 
 class DashboardController extends Controller
 {
-    public function index()
+    public function index(): \Inertia\Response
     {
         $watchedByYears = Watched::select('titles.start_year')
             ->selectRaw("COUNT('id')")

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class TokenController extends Controller
@@ -13,7 +14,10 @@ class TokenController extends Controller
             'save_posters' => ['nullable', 'boolean'],
         ]);
 
-        auth()->user()->update([
+        /** @var User $user */
+        $user = auth()->user();
+
+        $user->update([
             'save_posters' => $request->get('save', false),
             'token' => $request->get('token'),
         ]);

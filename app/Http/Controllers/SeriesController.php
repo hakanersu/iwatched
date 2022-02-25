@@ -2,15 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Movie;
 use App\Models\Name;
+use App\Models\User;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Inertia\Inertia;
 use App\Models\Series;
 use App\Models\Episode;
 
 class SeriesController extends Controller
 {
-    public function index()
+    public function index(): \Inertia\Response
     {
         $series = Series::filter()->simplePaginate(8)->through(function ($show) {
             $show->poster->fetched = true;
@@ -27,7 +29,7 @@ class SeriesController extends Controller
         ]);
     }
 
-    public function show($id)
+    public function show($id): \Inertia\Response
     {
         $series = Series::with('crew', 'principal', 'principal.name','poster','watched', 'rating')
             ->where('tconst', $id)
@@ -61,5 +63,18 @@ class SeriesController extends Controller
             return $item->sortBy('episode_number')->values();
         });
         return Inertia::render('Series/SeriesShow',  compact('series', 'directors', 'writers', 'episodes', 'seasons'));
+    }
+
+
+
+    public function unwatch(Request $request): RedirectResponse
+    {
+        /** @var User $user */
+        $user = auth()->user();
+
+        $user->watched()->where('tconst_id', $request->get('tconst'))
+            ->where('title_type', Series::class)->delete();
+
+        return back();
     }
 }

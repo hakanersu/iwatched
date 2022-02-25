@@ -4,6 +4,7 @@
 namespace App\Watched\Traits;
 
 
+use App\Models\Episode;
 use App\Models\Watched;
 
 trait Watchable
@@ -29,30 +30,6 @@ trait Watchable
     }
 
     /**
-     * Watch current model.
-     *
-     * @return mixed
-     */
-    public function watch()
-    {
-        $attributes = ['user_id' => auth()->id()];
-
-        if (! $this->watched()->where($attributes)->exists()) {
-            return $this->watched()->create($attributes);
-        }
-    }
-
-    /**
-     * Unwatch current model.
-     */
-    public function unwatch(): void
-    {
-        $attributes = ['user_id' => auth()->id()];
-
-        $this->watched()->where($attributes)->get()->each->delete();
-    }
-
-    /**
      * Return watched state of model.
      *
      * @return bool
@@ -70,5 +47,18 @@ trait Watchable
     public function getIsWatchedAttribute(): bool
     {
         return $this->isWatched();
+    }
+
+    public function watch()
+    {
+        return auth()->user()->watched()->firstOrcreate([
+            'title_type' => __CLASS__,
+            'tconst_id' => $this->tconst,
+            'user_id' => auth()->id(),
+        ],[
+            'watched_at' => now(),
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
     }
 }
