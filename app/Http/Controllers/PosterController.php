@@ -16,7 +16,7 @@ class PosterController extends Controller
 
         $poster = Poster::where('title_id', $request->get('tconst'))->first();
 
-        abort_unless((bool)$poster, 404);
+        abort_unless((bool)$poster, 204);
 
         if (!Storage::exists('public/posters/' . $poster->image)) {
             $poster->delete();

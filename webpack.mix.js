@@ -18,10 +18,18 @@ mix.js('resources/js/app.js', 'public/js').vue()
     ])
     .webpackConfig(require('./webpack.config'));
 
+const domain = 'iwatched.test';
+const homedir = require('os').homedir();
+
 mix.browserSync({
-    proxy: 'laravel.test',
-    host: 'laravel.test',
-    open: 'external'
+    proxy: 'https://' + domain,
+    host: domain,
+    open: 'external',
+    https: {
+        key: homedir + '/.config/valet/Certificates/' + domain + '.key',
+        cert: homedir + '/.config/valet/Certificates/' + domain + '.crt'
+    },
+    notify: true,
 });
 if (mix.inProduction()) {
     mix.version();

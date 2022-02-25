@@ -10,7 +10,7 @@ use Illuminate\Validation\Rule;
 
 class WatchController extends Controller
 {
-    public function __invoke(Request $request)
+    public function __invoke(Request $request): \Illuminate\Http\RedirectResponse
     {
         $request->validate([
             'action' => [

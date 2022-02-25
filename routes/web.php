@@ -34,6 +34,5 @@ Route::middleware(['auth:sanctum'])->resource('/movies', MovieController::class)
 Route::middleware(['auth:sanctum'])->resource('/series', SeriesController::class);
 Route::middleware(['auth:sanctum'])->get('/search', [SearchController::class, 'search']);
 Route::middleware(['auth:sanctum'])->put('/token', [TokenController::class, 'update'])->name('token');
-
 Route::middleware(['auth:sanctum'])->post('/watch', \App\Http\Controllers\WatchController::class);
 Route::middleware(['auth:sanctum'])->post('/check-poster', [PosterController::class, 'check']);

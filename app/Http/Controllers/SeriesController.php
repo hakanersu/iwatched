@@ -30,11 +30,7 @@ class SeriesController extends Controller
     {
         $series = Series::with('crew', 'principal', 'principal.name','poster','watched', 'rating')
             ->where('tconst', $id)
-            ->first();
-
-        if (!$series) {
-            abort(404);
-        }
+            ->firstOrFail();
 
         $directors = Name::whereIn('nconst',explode(',', $series->crew->directors ?? ''))->get();
         $writers = Name::whereIn('nconst', explode(',', $series->crew->writers ?? ''))->get();
