@@ -43,36 +43,4 @@ class MovieController extends Controller
             'writers' => $writers,
         ]);
     }
-
-    public function watch(Request $request)
-    {
-        /** @var User $user */
-        $user = auth()->user();
-
-        $user->watched()->firstOrCreate(
-            [
-                'tconst_id' => $request->get('tconst'),
-                'title_type' => Movie::class,
-                'user_id' => auth()->id(),
-            ],
-            [
-            'watched_at' => now(),
-            'created_at' => now(),
-            'updated_at' => now(),
-            ]
-        );
-
-        return back();
-    }
-
-    public function unwatch(Request $request)
-    {
-        /** @var User $user */
-        $user = auth()->user();
-
-        $user->watched()->where('tconst_id', $request->get('tconst'))
-            ->where('title_type', Movie::class)->delete();
-
-        return back();
-    }
 }

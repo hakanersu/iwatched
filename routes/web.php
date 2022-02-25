@@ -35,9 +35,5 @@ Route::middleware(['auth:sanctum', 'verified'])->resource('/series', SeriesContr
 Route::middleware(['auth:sanctum', 'verified'])->get('/search', [SearchController::class, 'search']);
 Route::middleware(['auth:sanctum', 'verified'])->put('/token', [TokenController::class, 'update'])->name('token');
 
-// Episodes
 Route::middleware(['auth:sanctum', 'verified'])->post('/watch', \App\Http\Controllers\WatchController::class);
-
-Route::middleware(['auth:sanctum', 'verified'])->post('/movies/watch', [MovieController::class, 'watch']);
-Route::middleware(['auth:sanctum', 'verified'])->post('/movies/unwatch', [MovieController::class, 'unwatch']);
 Route::middleware(['auth:sanctum', 'verified'])->post('/check-poster', [PosterController::class, 'check']);
