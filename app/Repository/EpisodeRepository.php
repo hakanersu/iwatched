@@ -41,17 +41,4 @@ class EpisodeRepository implements EpisodeInterface
     {
         return $this->user->watched()->where('tconst_id', $this->tconst)->delete();
     }
-
-    public function watchAll(): void
-    {
-
-    }
-
-
-    public function unWatchAll(): void
-    {
-
-    }
-
-
 }

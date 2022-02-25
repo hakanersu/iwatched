@@ -19335,9 +19335,10 @@ __webpack_require__.r(__webpack_exports__);
   methods: {
     toggleWatched: function toggleWatched() {
       this.watched = !this.watched;
-      var endPoint = this.watched ? "/".concat(this.type, "/watch") : "/".concat(this.type, "/unwatch");
-      this.$inertia.post(endPoint, {
-        tconst: this.movie.tconst
+      this.$inertia.post('/watch', {
+        tconst: this.movie.tconst,
+        action: this.watched ? "watch" : "unwatch",
+        type: this.type
       }, {
         preserveScroll: true
       }, {
@@ -21739,7 +21740,7 @@ __webpack_require__.r(__webpack_exports__);
   methods: {
     watchEpisode: function watchEpisode(e) {
       var action = e.target.checked ? 'watch' : 'unwatch';
-      this.$inertia.post('/episodes', {
+      this.$inertia.post('/watch', {
         tconst: e.target.value,
         action: action,
         type: 'episode'
@@ -21751,7 +21752,7 @@ __webpack_require__.r(__webpack_exports__);
       var _this2 = this;
 
       var action = this.isAllWatched ? 'unwatch-all' : 'watch-all';
-      this.$inertia.post('/episodes', {
+      this.$inertia.post('/watch', {
         tconst: this.series.tconst,
         action: action,
         type: 'series'
@@ -21784,7 +21785,7 @@ __webpack_require__.r(__webpack_exports__);
 
       if (request) {
         var action = this.watchedSeasons[season] ? 'unwatch-all' : 'watch-all';
-        this.$inertia.post('/episodes', {
+        this.$inertia.post('/watch', {
           tconst: this.series.tconst,
           season: season + 1,
           action: action,

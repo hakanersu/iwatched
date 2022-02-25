@@ -4,13 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Enum\WatchableEnum;
 use App\Enum\WatchEnum;
-use App\Models\Episode;
-use App\Repository\EpisodeRepository;
 use App\Repository\WatchableFactory;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 
-class EpisodeController extends Controller
+class WatchController extends Controller
 {
     public function __invoke(Request $request)
     {
@@ -23,7 +21,6 @@ class EpisodeController extends Controller
                 'required',
                 Rule::in(WatchableEnum::toArray())
             ]
-            //'tconst' => [Rule::requiredIf( fn () =>  in_array($request->get('action'), [WatchEnum::WATCH->value, WatchEnum::UNWATCH->value], true)), 'exists:episodes,tconst']
         ]);
 
         $repository = WatchableFactory::process(

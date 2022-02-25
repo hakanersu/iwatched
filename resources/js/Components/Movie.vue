@@ -94,8 +94,11 @@ export default defineComponent({
     methods: {
         toggleWatched() {
             this.watched = !this.watched
-            const endPoint = this.watched ? `/${this.type}/watch` : `/${this.type}/unwatch`;
-            this.$inertia.post(endPoint, {tconst: this.movie.tconst}, {
+            this.$inertia.post('/watch', {
+                tconst: this.movie.tconst,
+                action: this.watched ? `watch` : `unwatch`,
+                type: this.type
+            }, {
                 preserveScroll: true,
             }, {
                 resetOnSuccess: false

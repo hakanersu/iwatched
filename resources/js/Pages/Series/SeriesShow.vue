@@ -242,7 +242,7 @@ export default defineComponent({
         watchEpisode(e) {
             const action = e.target.checked ? 'watch' : 'unwatch';
 
-            this.$inertia.post('/episodes', {
+            this.$inertia.post('/watch', {
                 tconst: e.target.value,
                 action: action,
                 type: 'episode'
@@ -254,7 +254,7 @@ export default defineComponent({
         markAllWatched() {
             const action =this.isAllWatched ? 'unwatch-all' : 'watch-all';
 
-            this.$inertia.post('/episodes', {
+            this.$inertia.post('/watch', {
                 tconst: this.series.tconst,
                 action: action,
                 type: 'series'
@@ -282,7 +282,7 @@ export default defineComponent({
 
             if (request) {
                 const action = this.watchedSeasons[season] ? 'unwatch-all' : 'watch-all';
-                this.$inertia.post('/episodes', {
+                this.$inertia.post('/watch', {
                     tconst: this.series.tconst,
                     season: season + 1,
                     action: action,

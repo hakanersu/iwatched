@@ -1,13 +1,11 @@
 <?php
 
 use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\EpisodeController;
 use App\Http\Controllers\MovieController;
 use App\Http\Controllers\PosterController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\SeriesController;
 use App\Http\Controllers\TokenController;
-use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 auth()->loginUsingId(1);
@@ -38,7 +36,7 @@ Route::middleware(['auth:sanctum', 'verified'])->get('/search', [SearchControlle
 Route::middleware(['auth:sanctum', 'verified'])->put('/token', [TokenController::class, 'update'])->name('token');
 
 // Episodes
-Route::middleware(['auth:sanctum', 'verified'])->post('/episodes', EpisodeController::class);
+Route::middleware(['auth:sanctum', 'verified'])->post('/watch', \App\Http\Controllers\WatchController::class);
 
 Route::middleware(['auth:sanctum', 'verified'])->post('/movies/watch', [MovieController::class, 'watch']);
 Route::middleware(['auth:sanctum', 'verified'])->post('/movies/unwatch', [MovieController::class, 'unwatch']);

@@ -11,6 +11,7 @@ class WatchableFactory
         return match ($type) {
             WatchableEnum::EPISODE->value => new EpisodeRepository(),
             WatchableEnum::SERIES->value => new SeriesRepository(),
+            WatchableEnum::MOVIES->value => new MovieRepository(),
         };
     }
 
