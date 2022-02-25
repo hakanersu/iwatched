@@ -10,9 +10,12 @@ class AkaImporter extends Importer implements ImporterInterface
 
     public function start(): ImporterInterface
     {
+        $now = now();
         $this->output->writeln('<info>Importing akas.</info>');
 
         DB::statement("COPY akas(title_id, ordering,title,region,language,types,attributes,is_original_title) FROM '{$this->tsvPath}'");
+
+        $this->output->writeln('<comment>Importing aka finished in '.TimePassed::took($now).'.</comment>');
 
         return $this;
     }

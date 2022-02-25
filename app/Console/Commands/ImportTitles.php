@@ -3,12 +3,13 @@
 namespace App\Console\Commands;
 
 use App\Watched\Importers\ImporterInterface;
+use App\Watched\Importers\TimePassed;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
-
+use Storage;
 class ImportTitles extends Command
 {
     /**
@@ -40,6 +41,8 @@ class ImportTitles extends Command
 
         $fields = $original = ['title', 'episode', 'principal', 'name', 'crew', 'aka', 'rating'];
 
+        Storage::makeDirectory('imdb');
+
         $skip = $this->option('skip');
         $only = $this->option('only');
 
@@ -62,7 +65,10 @@ class ImportTitles extends Command
         $this->dropTables();
         $this->createTables();
 
+        $now = now();
         $this->fields->each(fn($field) => $this->importer($field)->download($this->output)->start()->index());
+
+        $this->warn('All process took '. TimePassed::took($now));
     }
 
     private function dropTables(): void

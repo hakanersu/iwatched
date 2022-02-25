@@ -1,18 +1,45 @@
 <?php
 
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\EpisodeController;
+use App\Http\Controllers\MovieController;
+use App\Http\Controllers\PosterController;
+use App\Http\Controllers\SearchController;
+use App\Http\Controllers\SeriesController;
+use App\Http\Controllers\TokenController;
+use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
+use Inertia\Inertia;
+auth()->loginUsingId(1);
 
-Route::view('/', 'welcome');
-
-Route::auth();
-
-Route::middleware('auth')->group(function () {
-    Route::resource('/watched', 'WatchedController');
-	Route::resource('/movies', 'MovieController');
-	Route::resource('/series', 'SeriesController');
-	Route::get('/dashboard', 'DashboardController@index')->name('home');
-	Route::get('search', 'SearchController@search')->name('search');
-	//Route::redirect('home', '/dashboard');
+Route::get('/', function () {
+    return Inertia::render('Welcome', [
+        'canLogin' => Route::has('login'),
+        'canRegister' => Route::has('register'),
+        'titles' => cache()->rememberForever('titles', function () {
+            return number_format(\App\Models\Title::count());
+        }),
+        'movies' => cache()->rememberForever('movies', function () {
+            return number_format(\App\Models\Title::where('title_type', 'movie')->count());
+        }),
+        'series' => cache()->rememberForever('series', function () {
+            return number_format(\App\Models\Title::where('title_type', 'tvSeries')->count());
+        }),
+        'episodes' => cache()->rememberForever('episodes', function () {
+            return number_format(\App\Models\Title::where('title_type', 'tvEpisode')->count());
+        }),
+    ]);
 });
 
+Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard',[DashboardController::class, 'index'])->name('dashboard');
+Route::middleware(['auth:sanctum', 'verified'])->resource('/movies', MovieController::class);
+Route::middleware(['auth:sanctum', 'verified'])->resource('/series', SeriesController::class);
+Route::middleware(['auth:sanctum', 'verified'])->get('/search', [SearchController::class, 'search']);
+Route::middleware(['auth:sanctum', 'verified'])->put('/token', [TokenController::class, 'update'])->name('token');
 
+// Episodes
+Route::middleware(['auth:sanctum', 'verified'])->post('/episodes', EpisodeController::class);
+
+Route::middleware(['auth:sanctum', 'verified'])->post('/movies/watch', [MovieController::class, 'watch']);
+Route::middleware(['auth:sanctum', 'verified'])->post('/movies/unwatch', [MovieController::class, 'unwatch']);
+Route::middleware(['auth:sanctum', 'verified'])->post('/check-poster', [PosterController::class, 'check']);

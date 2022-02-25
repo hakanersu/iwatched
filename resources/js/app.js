@@ -1,20 +1,20 @@
 require('./bootstrap');
 
-window.Vue = require('vue');
+import { createApp, h } from 'vue';
+import { createInertiaApp } from '@inertiajs/inertia-vue3';
+import { InertiaProgress } from '@inertiajs/progress';
 
-const files = require.context('./', true, /\.vue$/i)
-files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0].replace('Component',''), files(key).default))
+const appName = window.document.getElementsByTagName('title')[0]?.innerText || 'Laravel';
 
-import Autocomplete from '@trevoreyre/autocomplete-vue'
-import '@trevoreyre/autocomplete-vue/dist/style.css'
-
-Vue.use(Autocomplete)
-
-const app = new Vue({
-    el: '#app',
-    data () {
-        return {
-            open: false
-        }
-    }
+createInertiaApp({
+    title: (title) => `${title} - ${appName}`,
+    resolve: (name) => require(`./Pages/${name}.vue`),
+    setup({ el, app, props, plugin }) {
+        return createApp({ render: () => h(app, props) })
+            .use(plugin)
+            .mixin({ methods: { route } })
+            .mount(el);
+    },
 });
+
+InertiaProgress.init({ color: '#4B5563' });
