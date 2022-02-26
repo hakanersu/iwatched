@@ -130,6 +130,7 @@
                                 <!--                                <season-tab label="Season 3" :watched="true" />-->
                             </div>
                             <div
+                                v-if="$page.props.user"
                                 class="bg-gray-200 text-sm py-1 px-1 rounded select-none text-gray-700 inline-block flex items-center">
                                 <button
                                     class="rounded px-2 py-1 hover:bg-white hover:shadow hover:text-green-700 font-medium focus:outline-none"

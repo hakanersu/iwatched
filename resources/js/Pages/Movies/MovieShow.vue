@@ -17,7 +17,7 @@
                                 :alt="movie.original_title"
                             >
                         </div>
-                            <movie-watched-button />
+                            <movie-watched-button v-if="$page.props.user"/>
                     </div>
                     <div class="flex-1 px-5">
                         <div class="bg-white shadow overflow-hidden sm:rounded-lg">

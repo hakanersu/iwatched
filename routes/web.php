@@ -8,7 +8,6 @@ use App\Http\Controllers\SeriesController;
 use App\Http\Controllers\TokenController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
-auth()->loginUsingId(1);
 
 Route::get('/', function () {
     return Inertia::render('Welcome', [
@@ -27,12 +26,12 @@ Route::get('/', function () {
             return number_format(\App\Models\Title::where('title_type', 'tvEpisode')->count());
         }),
     ]);
-});
+})->name('welcome');
 
 Route::middleware(['auth:sanctum'])->get('/dashboard',[DashboardController::class, 'index'])->name('dashboard');
-Route::middleware(['auth:sanctum'])->resource('/movies', MovieController::class);
-Route::middleware(['auth:sanctum'])->resource('/series', SeriesController::class);
+Route::resource('/movies', MovieController::class);
+Route::resource('/series', SeriesController::class);
 Route::middleware(['auth:sanctum'])->get('/search', [SearchController::class, 'search']);
 Route::middleware(['auth:sanctum'])->put('/token', [TokenController::class, 'update'])->name('token');
 Route::middleware(['auth:sanctum'])->post('/watch', \App\Http\Controllers\WatchController::class);
-Route::middleware(['auth:sanctum'])->post('/check-poster', [PosterController::class, 'check']);
+Route::post('/check-poster', [PosterController::class, 'check']);

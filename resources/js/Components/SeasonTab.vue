@@ -8,6 +8,7 @@
             {{ label }}
         </button>
         <button
+            v-if="$page.props.user"
             class="rounded px-2 py-1 hover:bg-white hover:shadow hover:text-green-700 font-medium focus:outline-none"
             :class="{'bg-white text-green-700': watched}"
             @click="$emit('toggle')"

@@ -5,6 +5,7 @@
         :class="{'bg-green-800': watched, 'bg-black': !watched}"
     >
         <movie-watched-button
+            v-if="$page.props.user"
             :watched="watched"
             @toggle="toggleWatched()"
         />
