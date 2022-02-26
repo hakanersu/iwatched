@@ -1262,6 +1262,9 @@ select {
 .mb-2 {
 	margin-bottom: 0.5rem;
 }
+.mb-10 {
+	margin-bottom: 2.5rem;
+}
 .block {
 	display: block;
 }
@@ -1372,6 +1375,9 @@ select {
 }
 .w-64 {
 	width: 16rem;
+}
+.w-1\/2 {
+	width: 50%;
 }
 .min-w-0 {
 	min-width: 0px;
