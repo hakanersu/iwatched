@@ -95,9 +95,12 @@ class Title extends Model
 
         $url = "https://image.tmdb.org/t/p/w500{$posterPath}";
 
-        if ($posterPath && (auth()->check() || auth()->user()->save_posters)) {
+        if ($posterPath && auth()->guest()) {
+            FetchPoster::dispatch($url, $id);
+        } elseif ($posterPath && auth()->check() && auth()->user()->save_posters) {
             FetchPoster::dispatch($url, $id);
         }
+
 
         return $url;
     }
