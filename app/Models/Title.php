@@ -87,7 +87,11 @@ class Title extends Model
 
     public static function tmdb($id, $type='movie_results'): string
     {
-        $token = (auth()->check() && auth()->user()->token) ?? config("watched.tmdb_key");
+        $token = (auth()->check() && auth()->user()->token) ? auth()->user()->token : config("watched.tmdb_key");
+
+        if (!$token) {
+            return '/movie.png';
+        }
 
         $response = Http::get("https://api.themoviedb.org/3/find/{$id}?api_key=".$token."&external_source=imdb_id");
 
