@@ -97,7 +97,7 @@ class Title extends Model
 
         $posterPath = $response->json("{$type}.0.poster_path");
 
-        $url = "https://image.tmdb.org/t/p/w500{$posterPath}";
+        $url = $posterPath ? "https://image.tmdb.org/t/p/w500{$posterPath}" : '/movie.png';
 
         if ($posterPath) {
             FetchPoster::dispatch($url, $id);
