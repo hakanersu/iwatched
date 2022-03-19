@@ -1,8 +1,8 @@
 <template>
-    <app-layout title="Dashboard">
+    <app-layout :title="series.original_title">
         <template #header>
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                Breaking Bad
+                {{ series.original_title}}
             </h2>
         </template>
 
@@ -186,6 +186,7 @@ import AppLayout from '@/Layouts/AppLayout.vue'
 import Star from '@/Components/Star.vue'
 import iCheck from '@/Components/Checkbox.vue'
 import SeasonTab from "@/Components/SeasonTab";
+import { Head } from '@inertiajs/inertia-vue3'
 
 export default defineComponent({
     props: {
@@ -211,6 +212,7 @@ export default defineComponent({
         Star,
         iCheck,
         SeasonTab,
+        Head
     },
     computed: {
         seasonsNumbers() {

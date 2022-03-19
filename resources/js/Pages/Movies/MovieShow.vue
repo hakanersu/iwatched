@@ -1,5 +1,5 @@
 <template>
-    <app-layout title="Dashboard">
+    <app-layout :title="movie.original_title">
         <template #header>
             <h2 class="font-semibold text-xl text-gray-800 leading-tight" v-text="movie.primary_title" />
         </template>
